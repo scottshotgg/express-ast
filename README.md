@@ -663,4 +663,6 @@ This library is used in the Express compiler to produce [Abstract Syntax Trees](
 <br>
 <br>
 <br>
+<p style="text-align: center;">
 ☾ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ｇｏｏｄｎｉｇｈｔ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;☾
+</p>
