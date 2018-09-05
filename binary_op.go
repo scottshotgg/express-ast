@@ -22,9 +22,9 @@ const (
 type BinaryOperation struct {
 	Token     Token
 	Kind      BinaryOpType
-	LeftNode  *Expression
-	RightNode *Expression
-	Value     *Literal
+	LeftNode  Expression
+	RightNode Expression
+	Value     Literal
 }
 
 // func (b *BinaryOperation) Type() *Expression     { return b.Kind }

@@ -14,5 +14,5 @@ type Node interface {
 	// TODO: this will just be a string for now until I rework the lexer
 	TokenLiteral() string
 
-	Location() map[string]*Location
+	// Location() map[string]*Location
 }

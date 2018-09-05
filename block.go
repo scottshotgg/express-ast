@@ -5,9 +5,10 @@ package ast
 
 // `{` [ statement ]* `}`
 type Block struct {
-	Statements []*Statement
+	Token      Token
+	Statements []Statement
 	Length     int
 }
 
 func (_ *Block) statementNode()       {}
-func (b *Block) TokenLiteral() string { return ie.Token.Literal }
+func (b *Block) TokenLiteral() string { return b.Token.Literal }

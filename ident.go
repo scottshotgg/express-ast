@@ -2,7 +2,7 @@ package ast
 
 // [ type ] [ name ]
 type Ident struct {
-	// FIXME: change this to a VariableType later
+	Token Token
 	Type  string
 	Value string
 }

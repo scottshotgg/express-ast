@@ -21,5 +21,5 @@ type Assignment struct {
 	Value Expression
 }
 
-func (_ *Assignment) statmentNode() {}
-func (a *Assignment) TokenLiteral() { return a.Token.Literal }
+func (_ *Assignment) statmentNode()        {}
+func (a *Assignment) TokenLiteral() string { return a.Token.Literal }

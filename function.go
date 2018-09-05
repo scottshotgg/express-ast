@@ -4,8 +4,8 @@ package ast
 type Function struct {
 	Token     Token
 	Name      string
-	Arguments []*Expression
-	Returns   []*Expression
+	Arguments []Expression
+	Returns   []Expression
 	Body      Block
 }
 

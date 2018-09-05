@@ -15,16 +15,16 @@ type Literal interface {
 	Type() LiteralType
 }
 
-type Int struct {
+type IntLiteral struct {
 	Token Token
 	Type  LiteralType
 	Value int
 }
 
-func (_ *IntLiteral) expressionNode()      {}
-func (l *IntLiteral) TokenLiteral() string { return il.Token.Literal }
+func (_ *IntLiteral) expressionNode()       {}
+func (il *IntLiteral) TokenLiteral() string { return il.Token.Literal }
 
-type Float struct {
+type FloatLiteral struct {
 	Token Token
 	Type  LiteralType
 	Value float64
@@ -33,7 +33,7 @@ type Float struct {
 func (_ *FloatLiteral) expressionNode()       {}
 func (fl *FloatLiteral) TokenLiteral() string { return fl.Token.Literal }
 
-type Char struct {
+type CharLiteral struct {
 	Token Token
 	Type  LiteralType
 	Value [1]rune
@@ -42,7 +42,7 @@ type Char struct {
 func (_ *CharLiteral) expressionNode()       {}
 func (cl *CharLiteral) TokenLiteral() string { return cl.Token.Literal }
 
-type String struct {
+type StringLiteral struct {
 	Token Token
 	Type  LiteralType
 	Value string
@@ -51,7 +51,7 @@ type String struct {
 func (_ *StringLiteral) expressionNode()       {}
 func (sl *StringLiteral) TokenLiteral() string { return sl.Token.Literal }
 
-type Bool struct {
+type BoolLiteral struct {
 	Token Token
 	Type  LiteralType
 	Value bool
