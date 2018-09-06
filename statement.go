@@ -6,4 +6,6 @@ type Statement interface {
 
 	// This is just something to force the interface
 	statementNode()
+
+	// TODO: this should have a Type function
 }

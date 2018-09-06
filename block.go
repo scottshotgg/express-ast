@@ -3,6 +3,8 @@ package ast
 // If we want to allow objects to contain statements in Express objects,
 // then we would need to implement Blocks as an ExpressionStatement
 
+// TODO: try simplifying this and make one top level block per file and have a program effectively be a block
+
 // Block statement represents the following form:
 // `{` [ statement ]* `}`
 type Block struct {
