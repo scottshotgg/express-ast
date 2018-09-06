@@ -8,10 +8,14 @@ package ast
 type Block struct {
 	Token      Token
 	Statements []Statement
-	Length     int
 }
 
 func (b *Block) statementNode() {}
 
 // TokenLiteral returns the literal value of the token
 func (b *Block) TokenLiteral() string { return b.Token.Literal }
+
+// Length returns the length of statments in the block
+func (b *Block) Length() int {
+	return len(b.Statements)
+}

@@ -12,6 +12,8 @@ type Location struct {
 	End   *Position
 }
 
+// TODO: we should make more utilization functions around this
+
 // Node is an abstract type that is used to recursively define the AST
 type Node interface {
 	// TODO: this will just be a string for now until I rework the lexer

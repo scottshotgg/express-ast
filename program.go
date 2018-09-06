@@ -4,6 +4,10 @@ package ast
 // [ statement ]*
 type Program struct {
 	// We'll wanna put 'File' in between Program and Block at some point
-	Statements []Statement
-	Length     int
+	Files []File
+}
+
+// Length returns the length of files in the program
+func (p *Program) Length() int {
+	return len(p.Files)
 }

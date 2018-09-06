@@ -4,14 +4,23 @@ package ast
 type ConditionType int
 
 const (
-	// IsEqualTo is the == operator
-	IsEqualTo ConditionType = iota + 1
+	// EqualTo is the == operator
+	EqualTo ConditionType = iota + 1
+
+	// StrictlyEqualTo is the === operator that compares both type and value for dynamic variables
+	StrictlyEqualTo
 
 	// LessThan is the < operator
 	LessThan
 
 	// GreaterThan is the > operator
 	GreaterThan
+
+	// LessThanOrEqual is the <= operator
+	LessThanOrEqual
+
+	// GreaterThanOrEqual is the >= operator
+	GreaterThanOrEqual
 
 	// Not is the ! operator
 	Not
@@ -21,9 +30,21 @@ const (
 
 	// And is the && operator
 	And
+
+	// Nand is the !&& operator
+	Nand
+
+	// Nor is the !|| operator
+	Nor
+
+	// Xor is the ^^ operator
+	Xor
+
+	// Xnor is the !^^ operator
+	Xnor
 )
 
-// Condition represents the following form:
+// Condition represents an expression that always evaluates to a boolean value:
 // [ expression ] [ condition_op ] [ expression ]
 type Condition struct {
 	Token Token
