@@ -1,11 +1,19 @@
 package ast
 
+// BinaryOpType encompasses the types of binary operations
 type BinaryOpType int
 
 const (
+	// AdditionBinaryOp is the + operator
 	AdditionBinaryOp BinaryOpType = iota + 1
+
+	// SubtractionBinaryOp is the - operator
 	SubtractionBinaryOp
+
+	// MultiplicationBinaryOp is the * operator
 	MultiplicationBinaryOp
+
+	// DivisionBinaryOp is the / operator
 	DivisionBinaryOp
 )
 
@@ -18,7 +26,8 @@ const (
 // 	Evaluate() *Literal
 // }
 
-// [ expression ] [ bin_op ] [ expression ]
+// BinaryOperation represents the following form:
+// [ expression ] [ binary_op ] [ expression ]
 type BinaryOperation struct {
 	Token     Token
 	Kind      BinaryOpType
@@ -32,5 +41,7 @@ type BinaryOperation struct {
 // func (b *BinaryOperation) Left() *Expression     { return b.LeftExpr }
 // func (b *BinaryOperation) Evaluate() *Expression { return b.Value }
 
-func (_ *BinaryOperation) expressionNode()      {}
+func (b *BinaryOperation) expressionNode() {}
+
+// TokenLiteral returns the literal value of the token
 func (b *BinaryOperation) TokenLiteral() string { return b.Token.Literal }

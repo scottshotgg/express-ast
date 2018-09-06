@@ -1,5 +1,6 @@
 package ast
 
+// Function represents the following form:
 // `function` [ ident ] [ group ] { group } [ block ]
 type Function struct {
 	Token     Token
@@ -9,5 +10,7 @@ type Function struct {
 	Body      Block
 }
 
-func (_ *Function) statementNode()       {}
+func (f *Function) statementNode() {}
+
+// TokenLiteral returns the literal value of the token
 func (f *Function) TokenLiteral() string { return f.Token.Literal }

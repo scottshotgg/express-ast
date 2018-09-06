@@ -1,18 +1,20 @@
 package ast
 
+// AssignmentType encompasses the different types of assignment
 type AssignmentType int
 
 const (
-	// Equals =
+	// Equals is the = operator
 	Equals AssignmentType = iota + 1
 
-	// Set :
+	// Set is the : operator
 	Set
 
-	// Init :=
+	// Init is the := operator
 	Init
 )
 
+// Assignment statement represents the following form:
 // [ ident ] [ assign_op ] [ expression ]
 type Assignment struct {
 	Token Token
@@ -21,5 +23,7 @@ type Assignment struct {
 	Value Expression
 }
 
-func (_ *Assignment) statmentNode()        {}
+func (a *Assignment) statmentNode() {}
+
+// TokenLiteral returns the literal value of the token
 func (a *Assignment) TokenLiteral() string { return a.Token.Literal }

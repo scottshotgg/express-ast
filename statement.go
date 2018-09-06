@@ -1,5 +1,6 @@
 package ast
 
+// Statement is an abstract type that represents a complete sentence in Express
 type Statement interface {
 	Node
 

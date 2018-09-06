@@ -2,6 +2,7 @@ package ast
 
 // FIXME: need to think about this more
 
+// Call represents the following form:
 // [ ident ] [ group ]
 type Call struct {
 	Token     Token
@@ -10,5 +11,7 @@ type Call struct {
 	Returns   []*Expression
 }
 
-func (_ *Call) expressionNode()      {}
+func (c *Call) expressionNode() {}
+
+// TokenLiteral returns the literal value of the token
 func (c *Call) TokenLiteral() string { return c.Token.Literal }

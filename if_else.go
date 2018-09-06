@@ -1,5 +1,6 @@
 package ast
 
+// IfElse represents the following form:
 // if [ condition ] [ block ] { [ else ] [ statement ] }
 type IfElse struct {
 	Token         Token
@@ -11,5 +12,7 @@ type IfElse struct {
 	Else *Statement
 }
 
-func (_ *IfElse) statementNode()        {}
+func (ie *IfElse) statementNode() {}
+
+// TokenLiteral returns the literal value of the token
 func (ie *IfElse) TokenLiteral() string { return ie.Token.Literal }
