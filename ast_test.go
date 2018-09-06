@@ -9,13 +9,15 @@ import (
 	ast "github.com/scottshotgg/express-ast"
 )
 
-var c = &spew.ConfigState{
-	Indent:                "\t",
-	DisableMethods:        true,
-	DisablePointerMethods: true,
-	SortKeys:              true,
-	SpewKeys:              true,
-}
+var (
+	c = &spew.ConfigState{
+		Indent:                "\t",
+		DisableMethods:        true,
+		DisablePointerMethods: true,
+		SortKeys:              true,
+		SpewKeys:              true,
+	}
+)
 
 func TestAST(t *testing.T) {
 	a := ast.Program{

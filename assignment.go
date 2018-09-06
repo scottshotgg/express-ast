@@ -3,13 +3,13 @@ package ast
 type AssignmentType int
 
 const (
-	// =
+	// Equals =
 	Equals AssignmentType = iota + 1
 
-	// :
+	// Set :
 	Set
 
-	// :=
+	// Init :=
 	Init
 )
 
