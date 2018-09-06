@@ -5,6 +5,7 @@ package ast
 type Ident struct {
 	Token Token
 	Type  string
+	// Type  Type
 	Value string
 }
 
