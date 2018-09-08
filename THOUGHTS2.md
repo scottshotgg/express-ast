@@ -10,7 +10,6 @@ statements:
 - assignment
 - return
 - if/else
-- declaration -- dont know if we need to keep this
 - loops
 
 <br>

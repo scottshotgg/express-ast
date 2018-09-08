@@ -11,8 +11,8 @@ type Call struct {
 	Returns   []*Expression
 }
 
-// TODO: implement statement
 func (c *Call) expressionNode() {}
+func (c *Call) statementNode()  {}
 
 // TokenLiteral returns the literal value of the token
 func (c *Call) TokenLiteral() string { return c.Token.Literal }

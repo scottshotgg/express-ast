@@ -3,6 +3,8 @@ package ast
 // Function represents the following form:
 // `function` [ ident ] [ group ] { group } [ block ]
 type Function struct {
+	Lambda    bool
+	Async     bool
 	Token     Token
 	Name      string
 	Arguments []Expression

@@ -25,6 +25,10 @@ type Assignment struct {
 	Value       *Expression
 }
 
+// When going through the logic for this:
+//	- if Declaration is already set to true when Inferred is being set to true -> error
+//	- if the variable is already declared and Declared or Inferred is being set to true -> error
+
 func (a *Assignment) statmentNode() {}
 
 // TokenLiteral returns the literal value of the token
