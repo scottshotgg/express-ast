@@ -15,12 +15,14 @@ const (
 )
 
 // Assignment statement represents the following form:
-// [ ident ] [ assign_op ] [ expression ]
+// { type } [ ident ] [ assign_op ] [ expression ]
 type Assignment struct {
-	Token Token
-	Type  AssignmentType
-	Ident Ident
-	Value Expression
+	Declaration bool
+	Inferred    bool
+	Token       Token
+	Type        AssignmentType
+	Ident       Ident
+	Value       *Expression
 }
 
 func (a *Assignment) statmentNode() {}

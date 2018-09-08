@@ -1,7 +1,7 @@
 package ast
 
 // Ident represents the following form:
-// [ type ] [ name ]
+// [ name ]
 type Ident struct {
 	Token Token
 	Type  string
