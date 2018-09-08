@@ -1,6 +1,6 @@
 # THOUGHTS2
 
-lets just make a normal language thats pretty cool then we can experiment<br>
+lets just make a normal language thats pretty dank then we can experiment<br>
 
 program -> files<br>
 file -> statements
@@ -14,6 +14,7 @@ statements:
 - declaration
 - loops
 
+<br>
 statements use expressions
 
 expressions:
@@ -26,9 +27,12 @@ expressions:
   - string
   - object
   - struct
+  - map
+  - array
+  - fn
+  - var
 
 expressionStatements:
 
 - call
-- fn
 - block
