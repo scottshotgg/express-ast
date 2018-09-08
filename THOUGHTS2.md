@@ -8,7 +8,6 @@ file -> statements
 statements:
 
 - assignment
-- function
 - return
 - if/else
 - declaration
@@ -29,10 +28,10 @@ expressions:
   - struct
   - map
   - array
-  - fn
   - var
 
 expressionStatements:
 
+- fn/function/func
 - call
 - block
