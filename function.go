@@ -10,7 +10,8 @@ type Function struct {
 	Body      Block
 }
 
-func (f *Function) statementNode() {}
+func (f *Function) statementNode()  {}
+func (f *Function) expressionNode() {}
 
 // TokenLiteral returns the literal value of the token
 func (f *Function) TokenLiteral() string { return f.Token.Literal }

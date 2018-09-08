@@ -12,7 +12,9 @@ type Block struct {
 	Statements []Statement
 }
 
-func (b *Block) statementNode() {}
+// TODO: implement expression
+func (b *Block) statementNode()  {}
+func (b *Block) expressionNode() {}
 
 // TokenLiteral returns the literal value of the token
 func (b *Block) TokenLiteral() string { return b.Token.Literal }
