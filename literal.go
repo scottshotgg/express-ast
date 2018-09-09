@@ -1,31 +1,5 @@
 package ast
 
-// LiteralType encompasses all types of literals
-type LiteralType int
-
-const (
-	// IntType denotes an integer literal type
-	IntType LiteralType = iota + 1
-
-	// FloatType denotes a float literal type
-	FloatType
-
-	// CharType denotes a char literal type
-	CharType
-
-	// StringType denotes a string literal type
-	StringType
-
-	// BoolType denotes a bool literal type
-	BoolType
-
-	// VarType denotes a var literal type
-	VarType
-
-	// ObjectType denotes an object literal type
-	ObjectType
-)
-
 // Literal is an abstract types that represents a literal value, in constrast with a value-producer, such as an expression
 type Literal interface {
 	Type() LiteralType
@@ -144,3 +118,18 @@ func (sl *StructLiteral) expressionNode() {}
 
 // TokenLiteral returns the literal value of the token
 func (sl *StructLiteral) TokenLiteral() string { return ol.Token.Literal }
+
+// TODO: this might need to be moved to the type.go file
+// StructLiteral represents a named object : this produces a type
+type FunctionLiteral struct {
+	Token      Token
+	Type       LiteralType
+	ActingType LiteralType
+	// TODO: could either do it this way or make block implement literal and then it can be directly used as a literal
+	Value Block
+}
+
+func (fl *FunctionLiteral) expressionNode() {}
+
+// TokenLiteral returns the literal value of the token
+func (fl *FunctionLiteral) TokenLiteral() string { return fl.Token.Literal }
