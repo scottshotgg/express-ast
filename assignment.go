@@ -22,14 +22,14 @@ type Assignment struct {
 	Token       Token
 	Type        AssignmentType
 	Ident       Ident
-	Value       *Expression
+	Value       Expression
 }
 
 // When going through the logic for this:
 //	- if Declaration is already set to true when Inferred is being set to true -> error
 //	- if the variable is already declared and Declared or Inferred is being set to true -> error
 
-func (a *Assignment) statmentNode() {}
+func (a *Assignment) statementNode() {}
 
 // TokenLiteral returns the literal value of the token
 func (a *Assignment) TokenLiteral() string { return a.Token.Literal }

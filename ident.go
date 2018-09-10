@@ -3,10 +3,9 @@ package ast
 // Ident represents the following form:
 // [ name ]
 type Ident struct {
-	Token  Token
-	Type   LiteralType
-	Acting LiteralType
-	Value  string
+	Token Token
+	Type  Type
+	Name  string
 }
 
 func (i *Ident) expressionNode() {}

@@ -39,7 +39,7 @@ const (
 type Type struct {
 	Name       string
 	Type       LiteralType
-	ShadowType LiteralType
+	ShadowType *LiteralType
 	UpgradesTo *LiteralType
 }
 
@@ -50,14 +50,17 @@ var (
 	// Any type ID greater than 99 is a user defined type
 	typeIndex LiteralType = 99
 
-	upgradableTypesMap = map[LiteralType]LiteralType{
+	// UpgradableTypesMap allows definitions of upgradable types
+	UpgradableTypesMap = map[LiteralType]LiteralType{
 		IntType:    FloatType,
 		CharType:   StringType,
 		StructType: ObjectType,
 	}
 )
 
-func declareUserDefinedType(udt *Type) LiteralType {
+// DeclareUserDefinedType declares a user defined type in the
+// type map and returns a type ID
+func DeclareUserDefinedType(udt *Type) LiteralType {
 	typeIndex++
 
 	udt.Type = typeIndex

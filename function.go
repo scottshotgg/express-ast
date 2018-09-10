@@ -7,13 +7,19 @@ type Function struct {
 	Async     bool
 	Token     Token
 	Name      string
-	Arguments []Expression
-	Returns   []Expression
+	Arguments *Group
+	Returns   *Group
 	Body      Block
 }
 
-func (f *Function) statementNode()  {}
+// Implement statement
+func (f *Function) statementNode() {}
+
+// Implement expression
 func (f *Function) expressionNode() {}
 
 // TokenLiteral returns the literal value of the token
 func (f *Function) TokenLiteral() string { return f.Token.Literal }
+
+// Type implements literal so that functions can be assigned to idents
+func (f *Function) Type() LiteralType { return FunctionType }

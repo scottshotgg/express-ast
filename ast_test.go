@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/davecgh/go-spew/spew"
-	ast "github.com/scottshotgg/express-ast"
+	"github.com/scottshotgg/express-ast"
 )
 
 var (
@@ -19,50 +19,75 @@ var (
 	}
 )
 
+// TODO: FIXME: make function to do all this shit like NewInt, etc
+// take it from the token2 library
+
+/*
+	// The following ast represents a declared function from a file named "main.expr"
+
+	myAdder := function(int a, float b) (float) { return a + b }
+
+*/
+
 func TestAST(t *testing.T) {
 	a := ast.Program{
-		Files: []ast.File{
-			ast.File{
+		Files: map[string]ast.File{
+			"main.expr": ast.File{
 				Statements: []ast.Statement{
-					&ast.Block{},
-					&ast.Function{
-						Name: "myFunction",
-						Arguments: []ast.Expression{
-							&ast.IntLiteral{
-								Type:  ast.IntType,
-								Value: 444,
+					&ast.Assignment{
+						Declaration: true,
+						Inferred:    true,
+						Ident: ast.Ident{
+							Type: ast.Type{
+								Type: ast.FunctionType,
 							},
-							&ast.FloatLiteral{
-								Type:  ast.FloatType,
-								Value: 1.0,
-							},
+							Name: "myAdder",
 						},
-						Returns: []ast.Expression{
-							&ast.BinaryOperation{
-								Kind: ast.AdditionBinaryOp,
-								LeftNode: &ast.IntLiteral{
-									Type:  ast.IntType,
-									Value: 2,
-								},
-								RightNode: &ast.FloatLiteral{
-									Type:  ast.FloatType,
-									Value: 1.0,
+						Value: &ast.Function{
+							Name: "myFunction",
+							Arguments: &ast.Group{
+								Elements: []ast.Expression{
+									&ast.IntLiteral{
+										Type: ast.Type{
+											Type: ast.IntType,
+										},
+									},
+									&ast.FloatLiteral{
+										Type: ast.Type{
+											Type: ast.FloatType,
+										},
+									},
 								},
 							},
-						},
-						Body: ast.Block{
-							Statements: []ast.Statement{
-								&ast.Return{
-									Value: []ast.Expression{
-										&ast.BinaryOperation{
-											Kind: ast.AdditionBinaryOp,
-											LeftNode: &ast.IntLiteral{
-												Type:  ast.IntType,
-												Value: 2,
-											},
-											RightNode: &ast.FloatLiteral{
-												Type:  ast.FloatType,
-												Value: 1.0,
+							Returns: &ast.Group{
+								Elements: []ast.Expression{
+									// Not sure if this should be an anonymous ident with a name,
+									// without a name, or if ast.Type should just implement Expression
+									&ast.Ident{
+										Type: ast.Type{
+											Type: ast.FloatType,
+										},
+									},
+								},
+							},
+							Body: ast.Block{
+								Statements: []ast.Statement{
+									&ast.Return{
+										Value: []ast.Expression{
+											&ast.BinaryOperation{
+												Kind: ast.AdditionBinaryOp,
+												LeftNode: &ast.Ident{
+													Name: "a",
+													Type: ast.Type{
+														Type: ast.IntType,
+													},
+												},
+												RightNode: &ast.Ident{
+													Name: "b",
+													Type: ast.Type{
+														Type: ast.FloatType,
+													},
+												},
 											},
 										},
 									},
