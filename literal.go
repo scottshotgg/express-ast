@@ -98,6 +98,7 @@ func (ol *ObjectLiteral) TokenLiteral() string { return ol.Token.Literal }
 
 // StructLiteral represents a named object : this produces a type
 // TODO: this might need to be moved to the type.go file
+// FIXME: this might need to be fixed or something
 type StructLiteral struct {
 	Token Token
 	Type  Type

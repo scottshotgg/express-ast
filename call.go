@@ -7,8 +7,8 @@ package ast
 type Call struct {
 	Token     Token
 	Ident     *Ident
-	Arguments []*Expression
-	Returns   []*Expression
+	Arguments []Expression
+	Returns   []Expression
 }
 
 func (c *Call) expressionNode() {}
