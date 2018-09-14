@@ -36,7 +36,7 @@ func (fl *FloatLiteral) TokenLiteral() string { return fl.Token.Literal }
 type CharLiteral struct {
 	Token Token
 	Type  Type
-	Value [1]rune
+	Value rune
 }
 
 func (cl *CharLiteral) expressionNode() {}
@@ -123,3 +123,122 @@ func (fl *FunctionLiteral) expressionNode() {}
 
 // TokenLiteral returns the literal value of the token
 func (fl *FunctionLiteral) TokenLiteral() string { return fl.Token.Literal }
+
+// NewInt is used for making a new int literal
+func NewInt(token Token, value int) *IntLiteral {
+	return &IntLiteral{
+		Token: token,
+		Type:  NewIntType(),
+		Value: value,
+	}
+}
+
+// Make this take a type and initialize the default from the default map
+// func NewDefault(token Token) *IntLiteral {
+// 	return NewIntFromValue(token, 0)
+// }
+
+func NewBool(token Token, value bool) *BoolLiteral {
+	return &BoolLiteral{
+		Token: token,
+		Type:  NewBoolType(),
+		Value: value,
+	}
+}
+
+func NewFloat(token Token, value float64) *FloatLiteral {
+	return &FloatLiteral{
+		Token: token,
+		Type:  NewFloatType(),
+		Value: value,
+	}
+}
+
+func NewChar(token Token, value rune) *CharLiteral {
+	return &CharLiteral{
+		Token: token,
+		Type:  NewCharType(),
+		Value: value,
+	}
+}
+
+func NewString(token Token, value string) *StringLiteral {
+	return &StringLiteral{
+		Token: token,
+		Type:  NewStringType(),
+		Value: value,
+	}
+}
+
+// func NewStruct(token Token, type string, map[string]string) *StructLiteral {
+// 	return &StructLiteral{
+// 		Token: token,
+// 		Type: NewStructType(),
+
+// 	}
+// }
+
+// func NewVarFromInt(token Token, value int) *VarLiteral {
+// 	return &VarLiteral{
+// 		Token: token,
+// 		Type:  NewVarType(IntType),
+// 		Value: value,
+// 	}
+// }
+
+// func NewVarFromBool(token Token, value bool) *VarLiteral {
+// 	return &VarLiteral{
+// 		Token: token,
+// 		Type:  NewVarType(BoolType),
+// 		Value: value,
+// 	}
+// }
+
+// func NewVarFromFloat(token Token, value float64) *VarLiteral {
+// 	return &VarLiteral{
+// 		Token: token,
+// 		Type:  NewVarType(FloatType),
+// 		Value: value,
+// 	}
+// }
+
+// func NewVarFromChar(token Token, value rune) *VarLiteral {
+// 	return &VarLiteral{
+// 		Token: token,
+// 		Type:  NewVarType(CharType),
+// 		Value: value,
+// 	}
+// }
+
+// func NewVarFromString(token Token, value string) *VarLiteral {
+// 	return &VarLiteral{
+// 		Token: token,
+// 		Type:  NewVarType(StringType),
+// 		Value: value,
+// 	}
+// }
+
+// func NewVarFromObject(token Token, value Block) *VarLiteral {
+// 	return &VarLiteral{
+// 		Token: token,
+// 		Type:  NewVarType(ObjectType),
+// 		Value: value,
+// 	}
+// }
+
+// TODO: don't know how to represent these internally
+// func NewVarFromStruct(token Token, value string) *VarLiteral {
+// 	return &VarLiteral{
+// 		Token: token,
+// 		Type:  NewVarType(StructType),
+// 		Value: value,
+// 	}
+// }
+
+// func NewVarFromFunction(token Token, value string) *VarLiteral {
+// 	return &VarLiteral{
+// 		Token: token,
+// 		Type:  NewVarType(FunctionType),
+// 		Value: value,
+// 	}
+// }

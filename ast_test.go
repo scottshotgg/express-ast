@@ -25,7 +25,7 @@ var (
 /*
 	// The following ast represents a declared function from a file named "main.expr"
 
-	myAdder := function(int a, float b) (float) { return a + b }
+	myAdder := func(int a, float b) (float) { return a + b }
 
 */
 
@@ -38,25 +38,15 @@ func TestAST(t *testing.T) {
 						Declaration: true,
 						Inferred:    true,
 						Ident: ast.Ident{
-							Type: ast.Type{
-								Type: ast.FunctionType,
-							},
+							Type: ast.NewFloatType(),
 							Name: "myAdder",
 						},
 						Value: &ast.Function{
 							Name: "myFunction",
 							Arguments: &ast.Group{
 								Elements: []ast.Expression{
-									&ast.IntLiteral{
-										Type: ast.Type{
-											Type: ast.IntType,
-										},
-									},
-									&ast.FloatLiteral{
-										Type: ast.Type{
-											Type: ast.FloatType,
-										},
-									},
+									ast.NewInt(ast.Token{}, 0),
+									ast.NewFloat(ast.Token{}, 0),
 								},
 							},
 							Returns: &ast.Group{
@@ -64,9 +54,7 @@ func TestAST(t *testing.T) {
 									// Not sure if this should be an anonymous ident with a name,
 									// without a name, or if ast.Type should just implement Expression
 									&ast.Ident{
-										Type: ast.Type{
-											Type: ast.FloatType,
-										},
+										Type: ast.NewFloatType(),
 									},
 								},
 							},
@@ -78,15 +66,11 @@ func TestAST(t *testing.T) {
 												Kind: ast.AdditionBinaryOp,
 												LeftNode: &ast.Ident{
 													Name: "a",
-													Type: ast.Type{
-														Type: ast.IntType,
-													},
+													Type: ast.NewIntType(),
 												},
 												RightNode: &ast.Ident{
 													Name: "b",
-													Type: ast.Type{
-														Type: ast.FloatType,
-													},
+													Type: ast.NewFloatType(),
 												},
 											},
 										},

@@ -31,16 +31,16 @@ const (
 	// And is the && operator
 	And
 
-	// Nand is the !&& operator
-	Nand
-
-	// Nor is the !|| operator
-	Nor
-
 	// Xor is the ^^ operator
 	Xor
 
-	// Xnor is the !^^ operator
+	// Nand is the !& operator
+	Nand
+
+	// Nor is the !| operator
+	Nor
+
+	// Xnor is the !^ operator
 	Xnor
 )
 

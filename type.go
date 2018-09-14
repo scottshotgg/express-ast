@@ -37,10 +37,14 @@ const (
 
 // Type is used to specify a variable type
 type Type struct {
-	Name       string
-	Type       LiteralType
+	Name string
+	Type LiteralType
+
+	// UpgradesTo is used to specify how/what a variable can upgrade to
+	UpgradesTo LiteralType
+
+	// ShadowType is mainly used in dynamic types to specify what the real type is
 	ShadowType *LiteralType
-	UpgradesTo *LiteralType
 }
 
 var (
@@ -69,4 +73,82 @@ func DeclareUserDefinedType(udt *Type) LiteralType {
 	idToUserDefinedTypeMap[udt.Type] = udt
 
 	return typeIndex
+}
+
+// NewIntType is used to take some of the boilerplate code out of defining an int Type
+func NewIntType() Type {
+	return Type{
+		Name:       "int",
+		Type:       IntType,
+		UpgradesTo: FloatType,
+	}
+}
+
+// NewBoolType is used to take some of the boilerplate code out of defining a bool Type
+func NewBoolType() Type {
+	return Type{
+		Name: "bool",
+		Type: BoolType,
+	}
+}
+
+// NewFloatType is used to take some of the boilerplate code out of defining a float Type
+func NewFloatType() Type {
+	return Type{
+		Name: "float",
+		Type: FloatType,
+	}
+}
+
+// NewCharType is used to take some of the boilerplate code out of defining a char Type
+func NewCharType() Type {
+	return Type{
+		Name:       "char",
+		Type:       CharType,
+		UpgradesTo: StringType,
+	}
+}
+
+// NewStringType is used to take some of the boilerplate code out of defining a string Type
+func NewStringType() Type {
+	return Type{
+		Name: "string",
+		Type: StringType,
+	}
+}
+
+// NewVarType is used to take some of the boilerplate code out of defining an var Type
+func NewVarType(st LiteralType) Type {
+	// somehow need to gaurantee that the shadow type is not `var`
+	return Type{
+		Name:       "var",
+		Type:       VarType,
+		ShadowType: &st,
+		UpgradesTo: UpgradableTypesMap[st],
+	}
+}
+
+// NewObjectType is used to take some of the boilerplate code out of defining an object Type
+func NewObjectType() Type {
+	return Type{
+		Name: "object",
+		Type: ObjectType,
+	}
+}
+
+// NewStructType is used to take some of the boilerplate code out of defining a struct Type
+func NewStructType() Type {
+	return Type{
+		Name:       "struct",
+		Type:       StructType,
+		UpgradesTo: ObjectType,
+	}
+}
+
+// NewFunctionType is used to take some of the boilerplate code out of defining a function Type
+func NewFunctionType() Type {
+	return Type{
+		Name: "function",
+		Type: FunctionType,
+	}
 }
