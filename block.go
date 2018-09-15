@@ -13,8 +13,9 @@ type Block struct {
 }
 
 // TODO: implement expression
-func (b *Block) statementNode()  {}
-func (b *Block) expressionNode() {}
+func (b *Block) statementNode()     {}
+func (b *Block) expressionNode()    {}
+func (b *Block) elseStatementNode() {}
 
 // TokenLiteral returns the literal value of the token
 func (b *Block) TokenLiteral() string { return b.Token.Literal }

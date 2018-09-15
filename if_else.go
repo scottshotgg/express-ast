@@ -9,10 +9,11 @@ type IfElse struct {
 	ElseCondition *Condition
 	// TODO: Hmmm this is supposed to only be a block or another if statement
 	// but should we try to bound it?
-	Else *Statement
+	Else *ElseStatement
 }
 
-func (ie *IfElse) statementNode() {}
+func (ie *IfElse) statementNode()     {}
+func (ie *IfElse) elseStatementNode() {}
 
 // TokenLiteral returns the literal value of the token
 func (ie *IfElse) TokenLiteral() string { return ie.Token.Literal }

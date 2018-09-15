@@ -43,5 +43,7 @@ type Loop struct {
 	Start int
 	End   int
 	Step  int
-	// Iter  *Iterable
+	Body  *Block
+	Iter  *Iterable
+	Temps map[string]*Ident
 }

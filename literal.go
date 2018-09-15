@@ -88,7 +88,10 @@ type ObjectLiteral struct {
 	Token Token
 	Type  Type
 	// TODO: could either do it this way or make block implement literal and then it can be directly used as a literal
-	Value Block
+	// Value Block
+
+	// Only allow assignment operations inside objects for now
+	Value map[string]Literal
 }
 
 func (ol *ObjectLiteral) expressionNode() {}
@@ -102,8 +105,7 @@ func (ol *ObjectLiteral) TokenLiteral() string { return ol.Token.Literal }
 type StructLiteral struct {
 	Token Token
 	Type  Type
-	// TODO: could either do it this way or make block implement literal and then it can be directly used as a literal
-	Value Block
+	Value map[string]Literal
 }
 
 func (sl *StructLiteral) expressionNode() {}
@@ -116,6 +118,8 @@ type FunctionLiteral struct {
 	Token Token
 	Type  Type
 	// TODO: could either do it this way or make block implement literal and then it can be directly used as a literal
+
+	// On the backend, a function would essentially just be a block (i.e, object) that is able to be called
 	Value Block
 }
 
