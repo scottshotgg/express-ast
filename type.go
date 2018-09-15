@@ -117,38 +117,38 @@ func NewStringType() Type {
 	}
 }
 
-// NewVarType is used to take some of the boilerplate code out of defining an var Type
-func NewVarType(st LiteralType) Type {
-	// somehow need to gaurantee that the shadow type is not `var`
-	return Type{
-		Name:       "var",
-		Type:       VarType,
-		ShadowType: &st,
-		UpgradesTo: UpgradableTypesMap[st],
-	}
-}
+// // NewVarType is used to take some of the boilerplate code out of defining an var Type
+// func NewVarType(st LiteralType) Type {
+// 	// somehow need to gaurantee that the shadow type is not `var`
+// 	return Type{
+// 		Name:       "var",
+// 		Type:       VarType,
+// 		ShadowType: &st,
+// 		UpgradesTo: UpgradableTypesMap[st],
+// 	}
+// }
 
-// NewObjectType is used to take some of the boilerplate code out of defining an object Type
-func NewObjectType() Type {
-	return Type{
-		Name: "object",
-		Type: ObjectType,
-	}
-}
+// // NewObjectType is used to take some of the boilerplate code out of defining an object Type
+// func NewObjectType() Type {
+// 	return Type{
+// 		Name: "object",
+// 		Type: ObjectType,
+// 	}
+// }
 
-// NewStructType is used to take some of the boilerplate code out of defining a struct Type
-func NewStructType() Type {
-	return Type{
-		Name:       "struct",
-		Type:       StructType,
-		UpgradesTo: ObjectType,
-	}
-}
+// // NewStructType is used to take some of the boilerplate code out of defining a struct Type
+// func NewStructType() Type {
+// 	return Type{
+// 		Name:       "struct",
+// 		Type:       StructType,
+// 		UpgradesTo: ObjectType,
+// 	}
+// }
 
-// NewFunctionType is used to take some of the boilerplate code out of defining a function Type
-func NewFunctionType() Type {
-	return Type{
-		Name: "function",
-		Type: FunctionType,
-	}
-}
+// // NewFunctionType is used to take some of the boilerplate code out of defining a function Type
+// func NewFunctionType() Type {
+// 	return Type{
+// 		Name: "function",
+// 		Type: FunctionType,
+// 	}
+// }
