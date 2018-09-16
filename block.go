@@ -10,6 +10,10 @@ package ast
 type Block struct {
 	Token      Token
 	Statements []Statement
+
+	// TODO: Need to solve where this goes. I think it should go in the parser information,
+	// but if that's the case then it'll be a bit hard to link an object property
+	Scope map[string]Expression
 }
 
 // TODO: implement expression

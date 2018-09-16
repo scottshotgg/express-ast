@@ -105,7 +105,7 @@ func (ol *ObjectLiteral) TokenLiteral() string { return ol.Token.Literal }
 type StructLiteral struct {
 	Token Token
 	Type  Type
-	Value map[string]Literal
+	Value map[string]Expression
 }
 
 func (sl *StructLiteral) expressionNode() {}
@@ -174,75 +174,87 @@ func NewString(token Token, value string) *StringLiteral {
 	}
 }
 
-// func NewStruct(token Token, type string, map[string]string) *StructLiteral {
-// 	return &StructLiteral{
-// 		Token: token,
-// 		Type: NewStructType(),
+func NewStruct(token Token, structType LiteralType, value map[string]Expression) *StructLiteral {
+	return &StructLiteral{
+		Token: token,
+		Type:  NewStructType(structType),
 
-// 	}
-// }
+		// This is for the properties of the struct, but somehow we probably need to have a
+		// UserDefinedValueMap like we have for the UserDefinedTypeMap
+		Value: value,
+	}
+}
 
-// func NewVarFromInt(token Token, value int) *VarLiteral {
-// 	return &VarLiteral{
-// 		Token: token,
-// 		Type:  NewVarType(IntType),
-// 		Value: value,
-// 	}
-// }
+func NewObject(token Token, value Block) *ObjectLiteral {
+	return &ObjectLiteral{
+		Token: token,
+		Type:  NewObjectType(),
+		Value: value,
+	}
+}
 
-// func NewVarFromBool(token Token, value bool) *VarLiteral {
-// 	return &VarLiteral{
-// 		Token: token,
-// 		Type:  NewVarType(BoolType),
-// 		Value: value,
-// 	}
-// }
+func NewVarFromInt(token Token, value int) *VarLiteral {
+	return &VarLiteral{
+		Token: token,
+		Type:  NewVarType(IntType),
+		Value: value,
+	}
+}
 
-// func NewVarFromFloat(token Token, value float64) *VarLiteral {
-// 	return &VarLiteral{
-// 		Token: token,
-// 		Type:  NewVarType(FloatType),
-// 		Value: value,
-// 	}
-// }
+func NewVarFromBool(token Token, value bool) *VarLiteral {
+	return &VarLiteral{
+		Token: token,
+		Type:  NewVarType(BoolType),
+		Value: value,
+	}
+}
 
-// func NewVarFromChar(token Token, value rune) *VarLiteral {
-// 	return &VarLiteral{
-// 		Token: token,
-// 		Type:  NewVarType(CharType),
-// 		Value: value,
-// 	}
-// }
+func NewVarFromFloat(token Token, value float64) *VarLiteral {
+	return &VarLiteral{
+		Token: token,
+		Type:  NewVarType(FloatType),
+		Value: value,
+	}
+}
 
-// func NewVarFromString(token Token, value string) *VarLiteral {
-// 	return &VarLiteral{
-// 		Token: token,
-// 		Type:  NewVarType(StringType),
-// 		Value: value,
-// 	}
-// }
+func NewVarFromChar(token Token, value rune) *VarLiteral {
+	return &VarLiteral{
+		Token: token,
+		Type:  NewVarType(CharType),
+		Value: value,
+	}
+}
 
-// func NewVarFromObject(token Token, value Block) *VarLiteral {
-// 	return &VarLiteral{
-// 		Token: token,
-// 		Type:  NewVarType(ObjectType),
-// 		Value: value,
-// 	}
-// }
+func NewVarFromString(token Token, value string) *VarLiteral {
+	return &VarLiteral{
+		Token: token,
+		Type:  NewVarType(StringType),
+		Value: value,
+	}
+}
+
+func NewVarFromObject(token Token, value Block) *VarLiteral {
+	return &VarLiteral{
+		Token: token,
+		Type:  NewVarType(ObjectType),
+		Value: value,
+	}
+}
 
 // TODO: don't know how to represent these internally
-// func NewVarFromStruct(token Token, value string) *VarLiteral {
-// 	return &VarLiteral{
-// 		Token: token,
-// 		Type:  NewVarType(StructType),
-// 		Value: value,
-// 	}
-// }
+func NewVarFromStruct(token Token, structType LiteralType, value map[string]Expression) *VarLiteral {
+	return &VarLiteral{
+		Token: token,
+		Type:  NewVarType(StructType),
+		Value: value,
+	}
+}
 
-// func NewVarFromFunction(token Token, value string) *VarLiteral {
-// 	return &VarLiteral{
-// 		Token: token,
-// 		Type:  NewVarType(FunctionType),
-// 		Value: value,
-// 	}
-// }
+// This is essentially the same thing as the block right now but it is callable
+func NewVarFromFunction(token Token, value Block) *VarLiteral {
+	return &VarLiteral{
+		Token: token,
+		Type:  NewVarType(FunctionType),
+		Value: value,
+	}
+}
