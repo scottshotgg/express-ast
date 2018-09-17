@@ -88,10 +88,10 @@ type ObjectLiteral struct {
 	Token Token
 	Type  Type
 	// TODO: could either do it this way or make block implement literal and then it can be directly used as a literal
-	// Value Block
+	Value Block
 
 	// Only allow assignment operations inside objects for now
-	Value map[string]Literal
+	// Value map[string]Literal
 }
 
 func (ol *ObjectLiteral) expressionNode() {}

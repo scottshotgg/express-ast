@@ -40,3 +40,20 @@ func (a *Assignment) TokenLiteral() string { return a.Token.Literal }
 
 // 	}
 // }
+
+func NewAssignment(t Token, i Ident, at AssignmentType, v Expression) *Assignment {
+	return &Assignment{
+		Token: t,
+		Ident: i,
+		Type:  at,
+		Value: v,
+	}
+}
+
+func (a *Assignment) SetDeclaration(declaration bool) {
+	a.Declaration = declaration
+}
+
+func (a *Assignment) SetInferred(inferred bool) {
+	a.Inferred = inferred
+}
