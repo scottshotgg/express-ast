@@ -2,6 +2,7 @@ package ast
 
 // File represents a file that is being compiled
 type File struct {
+	Name       string
 	Statements []Statement
 }
 
@@ -15,4 +16,14 @@ func (f *File) Length() int {
 	// }
 
 	return -1
+}
+
+func NewFile(filename string) *File {
+	return &File{
+		Name: filename,
+	}
+}
+
+func (f *File) AddStatement(stmt Statement) {
+	f.Statements = append(f.Statements, stmt)
 }

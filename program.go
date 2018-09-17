@@ -3,10 +3,21 @@ package ast
 // Program represents the following form:
 // [ statement ]*
 type Program struct {
-	Files map[string]File
+	// Name string // Don't know if I should include this or not
+	Files map[string]*File
 }
 
 // Length returns the length of files in the program
 func (p *Program) Length() int {
 	return len(p.Files)
+}
+
+func NewProgram() *Program {
+	return &Program{
+		Files: map[string]*File{},
+	}
+}
+
+func (p *Program) AddFile(filename string) {
+	p.Files[filename] = NewFile(filename)
 }
