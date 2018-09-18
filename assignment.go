@@ -1,5 +1,7 @@
 package ast
 
+import "errors"
+
 // AssignmentType encompasses the different types of assignment
 type AssignmentType int
 
@@ -41,13 +43,23 @@ func (a *Assignment) TokenLiteral() string { return a.Token.Literal }
 // 	}
 // }
 
-func NewAssignment(t Token, i Ident, at AssignmentType, v Expression) *Assignment {
-	return &Assignment{
+func NewAssignment(t Token, i Ident, at AssignmentType, e Expression) (*Assignment, error) {
+	if e == nil {
+		return nil, errors.New("Expression value cannot by nil")
+	}
+
+	as := Assignment{
 		Token: t,
 		Ident: i,
 		Type:  at,
-		Value: v,
+		Value: e,
 	}
+
+	if at == Init {
+		as.Inferred = true
+	}
+
+	return &as, nil
 }
 
 func (a *Assignment) SetDeclaration(declaration bool) {
@@ -57,3 +69,9 @@ func (a *Assignment) SetDeclaration(declaration bool) {
 func (a *Assignment) SetInferred(inferred bool) {
 	a.Inferred = inferred
 }
+
+// func (a *Assignment) ExpressionType() {
+// 	if a.Value != nil {
+// 		return
+// 	}
+// }

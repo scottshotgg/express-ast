@@ -18,6 +18,6 @@ func NewProgram() *Program {
 	}
 }
 
-func (p *Program) AddFile(filename string) {
-	p.Files[filename] = NewFile(filename)
+func (p *Program) AddFile(f *File) {
+	p.Files[f.Name] = f
 }
