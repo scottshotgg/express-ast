@@ -23,7 +23,7 @@ type Assignment struct {
 	Inferred    bool
 	Token       Token
 	Type        AssignmentType
-	Ident       Ident
+	Ident       *Ident
 	Value       Expression
 }
 
@@ -43,7 +43,7 @@ func (a *Assignment) TokenLiteral() string { return a.Token.Literal }
 // 	}
 // }
 
-func NewAssignment(t Token, i Ident, at AssignmentType, e Expression) (*Assignment, error) {
+func NewAssignment(t Token, i *Ident, at AssignmentType, e Expression) (*Assignment, error) {
 	if e == nil {
 		return nil, errors.New("Expression value cannot by nil")
 	}
