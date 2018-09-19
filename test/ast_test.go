@@ -31,13 +31,13 @@ var (
 
 func TestAST(t *testing.T) {
 	a := ast.Program{
-		Files: map[string]ast.File{
-			"main.expr": ast.File{
+		Files: map[string]*ast.File{
+			"main.expr": &ast.File{
 				Statements: []ast.Statement{
 					&ast.Assignment{
 						Declaration: true,
 						Inferred:    true,
-						Ident: ast.Ident{
+						Ident: &ast.Ident{
 							Type: ast.NewFloatType(),
 							Name: "myAdder",
 						},

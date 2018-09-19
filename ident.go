@@ -2,8 +2,6 @@ package ast
 
 import (
 	"errors"
-
-	ast "github.com/scottshotgg/express-ast"
 )
 
 // Ident represents the following form:
@@ -41,7 +39,7 @@ func NewIntIdent(t Token, n string) (*Ident, error) {
 
 	return &Ident{
 		Token: t,
-		Type:  ast.NewIntType(),
+		Type:  NewIntType(),
 		Name:  n,
 	}, nil
 }
@@ -53,7 +51,7 @@ func NewBoolIdent(t Token, n string) (*Ident, error) {
 
 	return &Ident{
 		Token: t,
-		Type:  ast.NewBoolType(),
+		Type:  NewBoolType(),
 		Name:  n,
 	}, nil
 }
@@ -65,7 +63,7 @@ func NewFloatIdent(t Token, n string) (*Ident, error) {
 
 	return &Ident{
 		Token: t,
-		Type:  ast.NewFloatType(),
+		Type:  NewFloatType(),
 		Name:  n,
 	}, nil
 }
@@ -77,7 +75,7 @@ func NewCharIdent(t Token, n string) (*Ident, error) {
 
 	return &Ident{
 		Token: t,
-		Type:  ast.NewCharType(),
+		Type:  NewCharType(),
 		Name:  n,
 	}, nil
 }
@@ -89,7 +87,7 @@ func NewStringIdent(t Token, n string) (*Ident, error) {
 
 	return &Ident{
 		Token: t,
-		Type:  ast.NewStringType(),
+		Type:  NewStringType(),
 		Name:  n,
 	}, nil
 }
@@ -101,7 +99,7 @@ func NewStringIdent(t Token, n string) (*Ident, error) {
 
 // 	return &Ident{
 // 		Token: t,
-// 		Type:  ast.NewStructType(),
+// 		Type:  NewStructType(),
 // 		Name:  n,
 // 	}, nil
 // }
@@ -113,7 +111,7 @@ func NewObjectIdent(t Token, n string) (*Ident, error) {
 
 	return &Ident{
 		Token: t,
-		Type:  ast.NewObjectType(),
+		Type:  NewObjectType(),
 		Name:  n,
 	}, nil
 }
@@ -125,7 +123,7 @@ func NewFunctionIdent(t Token, n string) (*Ident, error) {
 
 	return &Ident{
 		Token: t,
-		Type:  ast.NewFunctionType(),
+		Type:  NewFunctionType(),
 		Name:  n,
 	}, nil
 }
@@ -137,7 +135,7 @@ func NewFunctionIdent(t Token, n string) (*Ident, error) {
 
 // 	return &Ident{
 // 		Token: t,
-// 		Type:  ast.NewVarType(),
+// 		Type:  NewVarType(),
 // 		Name:  n,
 // 	}, nil
 // }
