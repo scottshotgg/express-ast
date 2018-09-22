@@ -2,6 +2,7 @@ package ast
 
 // Literal is an abstract type that represents a literal value, in constrast with a value-producer, such as an expression
 type Literal interface {
+	Expression
 	Type() Type
 }
 
@@ -22,6 +23,8 @@ func (il *IntLiteral) TokenLiteral() string { return il.Token.Literal }
 // Type implements literal
 func (il *IntLiteral) Type() Type { return il.TypeOf }
 
+func (il *IntLiteral) Kind() NodeType { return LiteralNode }
+
 // BoolLiteral represents a variable that is restricted to either a true or false value
 type BoolLiteral struct {
 	Token  Token
@@ -36,6 +39,8 @@ func (bl *BoolLiteral) TokenLiteral() string { return bl.Token.Literal }
 
 // Type implements literal
 func (bl *BoolLiteral) Type() Type { return bl.TypeOf }
+
+func (bl *BoolLiteral) Kind() NodeType { return LiteralNode }
 
 // FloatLiteral represents any floating point number
 type FloatLiteral struct {
@@ -52,6 +57,8 @@ func (fl *FloatLiteral) TokenLiteral() string { return fl.Token.Literal }
 // Type implements literal
 func (fl *FloatLiteral) Type() Type { return fl.TypeOf }
 
+func (fl *FloatLiteral) Kind() NodeType { return LiteralNode }
+
 // CharLiteral represents a single-character capped string:
 // `'` [ _single_character_ ] `'`
 type CharLiteral struct {
@@ -67,6 +74,8 @@ func (cl *CharLiteral) TokenLiteral() string { return cl.Token.Literal }
 
 // Type implements literal
 func (cl *CharLiteral) Type() Type { return cl.TypeOf }
+
+func (cl *CharLiteral) Kind() NodeType { return LiteralNode }
 
 // StringLiteral represents a double quoted body of text:
 // TODO: how to do a backtick quoted body of text
@@ -85,6 +94,8 @@ func (sl *StringLiteral) TokenLiteral() string { return sl.Token.Literal }
 // Type implements literal
 func (sl *StringLiteral) Type() Type { return sl.TypeOf }
 
+func (sl *StringLiteral) Kind() NodeType { return LiteralNode }
+
 // VarLiteral represents a dynamically typed variable; it can hold anything
 type VarLiteral struct {
 	Token  Token
@@ -100,6 +111,8 @@ func (vl *VarLiteral) TokenLiteral() string { return vl.Token.Literal }
 
 // Type implements literal
 func (vl *VarLiteral) Type() Type { return vl.TypeOf }
+
+func (vl *VarLiteral) Kind() NodeType { return LiteralNode }
 
 // ObjectLiteral represents a named block : this produces a variable
 type ObjectLiteral struct {
@@ -120,6 +133,8 @@ func (ol *ObjectLiteral) TokenLiteral() string { return ol.Token.Literal }
 // Type implements literal
 func (ol *ObjectLiteral) Type() Type { return ol.TypeOf }
 
+func (ol *ObjectLiteral) Kind() NodeType { return LiteralNode }
+
 // StructLiteral represents a named object : this produces a type
 // TODO: this might need to be moved to the type.go file
 // FIXME: this might need to be fixed or something
@@ -136,6 +151,8 @@ func (sl *StructLiteral) TokenLiteral() string { return sl.Token.Literal }
 
 // Type implements literal
 func (sl *StructLiteral) Type() Type { return sl.TypeOf }
+
+func (sl *StructLiteral) Kind() NodeType { return LiteralNode }
 
 // FunctionLiteral represents a named object : this produces a type
 type FunctionLiteral struct {
@@ -154,6 +171,8 @@ func (fl *FunctionLiteral) TokenLiteral() string { return fl.Token.Literal }
 
 // Type implements literal
 func (fl *FunctionLiteral) Type() Type { return fl.TypeOf }
+
+func (fl *FunctionLiteral) Kind() NodeType { return LiteralNode }
 
 // func NewLiteral(t Token, v interface{}) *Literal {
 

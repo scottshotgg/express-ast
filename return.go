@@ -11,3 +11,5 @@ func (r *Return) statementNode() {}
 
 // TokenLiteral returns the literal value of the token
 func (r *Return) TokenLiteral() string { return r.Token.Literal }
+
+func (r *Return) Kind() NodeType { return ReturnNode }

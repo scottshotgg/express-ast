@@ -23,3 +23,5 @@ func NewProgram() *Program {
 func (p *Program) AddFile(f *File) {
 	p.Files[f.Name] = f
 }
+
+func (p *Program) Kind() NodeType { return ProgramNode }

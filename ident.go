@@ -17,6 +17,8 @@ func (i *Ident) expressionNode() {}
 // TokenLiteral returns the literal value of the token
 func (i *Ident) TokenLiteral() string { return i.Token.Literal }
 
+func (i *Ident) Kind() NodeType { return IdentNode }
+
 // Might need to make specific type-functions
 // But I don't think identifiers here need to have a type, that's NOT what the AST is for; keep track of that in the parser, etc
 

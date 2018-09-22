@@ -14,6 +14,6 @@ func (a *Array) expressionNode() {}
 func (a *Array) TokenLiteral() string { return a.Token.Literal }
 
 // Type implements Literal
-func (a *Array) Type() LiteralType {
-	return a.TypeOf
-}
+func (a *Array) Type() LiteralType { return a.TypeOf }
+
+func (a *Array) Kind() NodeType { return ArrayNode }

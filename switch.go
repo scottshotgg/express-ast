@@ -29,3 +29,5 @@ func (s *Switch) statementNode() {}
 
 // TokenLiteral returns the literal value of the token
 func (s *Switch) TokenLiteral() string { return s.Token.Literal }
+
+func (s *Switch) Kind() NodeType { return SwitchNode }

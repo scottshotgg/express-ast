@@ -63,7 +63,7 @@ func TestAST(t *testing.T) {
 									&ast.Return{
 										Value: []ast.Expression{
 											&ast.BinaryOperation{
-												Kind: ast.AdditionBinaryOp,
+												Op: ast.AdditionBinaryOp,
 												LeftNode: &ast.Ident{
 													Name: "a",
 													Type: ast.NewIntType(),

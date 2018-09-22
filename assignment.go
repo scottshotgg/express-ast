@@ -36,6 +36,8 @@ func (a *Assignment) statementNode() {}
 // TokenLiteral returns the literal value of the token
 func (a *Assignment) TokenLiteral() string { return a.Token.Literal }
 
+func (a *Assignment) Kind() NodeType { return AssignmentNode }
+
 // TODO: dont think I wanna do this yet
 // func NewAssignmentStatement() Assignment {
 // 	return &Assignment{

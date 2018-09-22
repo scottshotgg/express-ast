@@ -32,7 +32,7 @@ const (
 // [ expression ] [ binary_op ] [ expression ]
 type BinaryOperation struct {
 	Token     Token
-	Kind      BinaryOpType
+	Op        BinaryOpType
 	LeftNode  Expression
 	RightNode Expression
 	Value     Literal
@@ -47,6 +47,8 @@ func (b *BinaryOperation) expressionNode() {}
 
 // TokenLiteral returns the literal value of the token
 func (b *BinaryOperation) TokenLiteral() string { return b.Token.Literal }
+
+func (b *BinaryOperation) Kind() NodeType { return BinaryOperationNode }
 
 // NewBinaryOperation returns a BinaryOperation with the evaluation value
 func NewBinaryOperation(t Token, binOpString string, l Expression, r Expression) (*BinaryOperation, error) {
@@ -71,7 +73,7 @@ func NewBinaryOperation(t Token, binOpString string, l Expression, r Expression)
 
 	return &BinaryOperation{
 		Token:     t,
-		Kind:      k,
+		Op:        k,
 		LeftNode:  l,
 		RightNode: r,
 	}, nil

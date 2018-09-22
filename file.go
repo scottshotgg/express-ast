@@ -29,3 +29,5 @@ func NewFile(filename string) *File {
 func (f *File) AddStatement(stmt Statement) {
 	f.Statements = append(f.Statements, stmt)
 }
+
+func (f *File) Kind() NodeType { return FileNode }
