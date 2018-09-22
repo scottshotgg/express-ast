@@ -1,5 +1,7 @@
 package ast
 
+import "github.com/pkg/errors"
+
 // BinaryOpType encompasses the types of binary operations
 type BinaryOpType int
 
@@ -47,11 +49,30 @@ func (b *BinaryOperation) expressionNode() {}
 func (b *BinaryOperation) TokenLiteral() string { return b.Token.Literal }
 
 // NewBinaryOperation returns a BinaryOperation with the evaluation value
-func NewBinaryOperation(t Token, k BinaryOpType, l Expression, r Expression) *BinaryOperation {
+func NewBinaryOperation(t Token, binOpString string, l Expression, r Expression) (*BinaryOperation, error) {
+	var k BinaryOpType
+
+	switch binOpString {
+	case "+":
+		k = AdditionBinaryOp
+
+	case "-":
+		k = SubtractionBinaryOp
+
+	case "*":
+		k = MultiplicationBinaryOp
+
+	case "/":
+		k = DivisionBinaryOp
+
+	default:
+		return nil, errors.Errorf("Could not decifer operation from supplied operand: %s", binOpString)
+	}
+
 	return &BinaryOperation{
 		Token:     t,
 		Kind:      k,
 		LeftNode:  l,
 		RightNode: r,
-	}
+	}, nil
 }
