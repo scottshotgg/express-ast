@@ -61,17 +61,15 @@ func TestAST(t *testing.T) {
 							Body: ast.Block{
 								Statements: []ast.Statement{
 									&ast.Return{
-										Value: []ast.Expression{
-											&ast.BinaryOperation{
-												Op: ast.AdditionBinaryOp,
-												LeftNode: &ast.Ident{
-													Name: "a",
-													Type: ast.NewIntType(),
-												},
-												RightNode: &ast.Ident{
-													Name: "b",
-													Type: ast.NewFloatType(),
-												},
+										Value: &ast.BinaryOperation{
+											Op: ast.AdditionBinaryOp,
+											LeftNode: &ast.Ident{
+												Name: "a",
+												Type: ast.NewIntType(),
+											},
+											RightNode: &ast.Ident{
+												Name: "b",
+												Type: ast.NewFloatType(),
 											},
 										},
 									},
