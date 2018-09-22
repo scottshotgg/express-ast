@@ -155,7 +155,11 @@ func (fl *FunctionLiteral) TokenLiteral() string { return fl.Token.Literal }
 // Type implements literal
 func (fl *FunctionLiteral) Type() Type { return fl.TypeOf }
 
-// NewInt is used for making a new int literal
+// func NewLiteral(t Token, v interface{}) *Literal {
+
+// }
+
+// NewInt returns a new int literal
 func NewInt(token Token, value int) *IntLiteral {
 	return &IntLiteral{
 		Token:  token,
@@ -169,6 +173,7 @@ func NewInt(token Token, value int) *IntLiteral {
 // 	return NewIntFromValue(token, 0)
 // }
 
+// NewBool returns a new bool literal
 func NewBool(token Token, value bool) *BoolLiteral {
 	return &BoolLiteral{
 		Token:  token,
@@ -177,6 +182,7 @@ func NewBool(token Token, value bool) *BoolLiteral {
 	}
 }
 
+// NewFloat returns a new float literal
 func NewFloat(token Token, value float64) *FloatLiteral {
 	return &FloatLiteral{
 		Token:  token,
@@ -185,6 +191,7 @@ func NewFloat(token Token, value float64) *FloatLiteral {
 	}
 }
 
+// NewChar returns a new char literal
 func NewChar(token Token, value rune) *CharLiteral {
 	return &CharLiteral{
 		Token:  token,
@@ -193,6 +200,7 @@ func NewChar(token Token, value rune) *CharLiteral {
 	}
 }
 
+// NewString returns a new string literal
 func NewString(token Token, value string) *StringLiteral {
 	return &StringLiteral{
 		Token:  token,
@@ -201,6 +209,7 @@ func NewString(token Token, value string) *StringLiteral {
 	}
 }
 
+// NewStruct returns a new struct literal
 func NewStruct(token Token, structType LiteralType, value map[string]Expression) *StructLiteral {
 	return &StructLiteral{
 		Token:  token,
@@ -212,6 +221,7 @@ func NewStruct(token Token, structType LiteralType, value map[string]Expression)
 	}
 }
 
+// NewObject returns a new object literal
 func NewObject(token Token, value Block) *ObjectLiteral {
 	return &ObjectLiteral{
 		Token:  token,
@@ -220,6 +230,7 @@ func NewObject(token Token, value Block) *ObjectLiteral {
 	}
 }
 
+// NewVarFromInt returns a new int shadow-typed var
 func NewVarFromInt(token Token, value int) *VarLiteral {
 	return &VarLiteral{
 		Token:  token,
@@ -228,6 +239,7 @@ func NewVarFromInt(token Token, value int) *VarLiteral {
 	}
 }
 
+// NewVarFromBool returns a new bool shadow-typed var
 func NewVarFromBool(token Token, value bool) *VarLiteral {
 	return &VarLiteral{
 		Token:  token,
@@ -236,6 +248,7 @@ func NewVarFromBool(token Token, value bool) *VarLiteral {
 	}
 }
 
+// NewVarFromFloat returns a new float shadow-typed var
 func NewVarFromFloat(token Token, value float64) *VarLiteral {
 	return &VarLiteral{
 		Token:  token,
@@ -244,6 +257,7 @@ func NewVarFromFloat(token Token, value float64) *VarLiteral {
 	}
 }
 
+// NewVarFromChar returns a new char shadow-typed var
 func NewVarFromChar(token Token, value rune) *VarLiteral {
 	return &VarLiteral{
 		Token:  token,
@@ -252,6 +266,7 @@ func NewVarFromChar(token Token, value rune) *VarLiteral {
 	}
 }
 
+// NewVarFromString returns a new string shadow-typed var
 func NewVarFromString(token Token, value string) *VarLiteral {
 	return &VarLiteral{
 		Token:  token,
@@ -260,6 +275,7 @@ func NewVarFromString(token Token, value string) *VarLiteral {
 	}
 }
 
+// NewVarFromObject returns a new object shadow-typed var
 func NewVarFromObject(token Token, value Block) *VarLiteral {
 	return &VarLiteral{
 		Token:  token,
@@ -268,16 +284,16 @@ func NewVarFromObject(token Token, value Block) *VarLiteral {
 	}
 }
 
-// TODO: don't know how to represent these internally
-func NewVarFromStruct(token Token, structType LiteralType, value map[string]Expression) *VarLiteral {
-	return &VarLiteral{
-		Token:  token,
-		TypeOf: NewVarType(StructType),
-		Value:  value,
-	}
-}
+// // NewVarFromStruct returns a new struct shadow-typed var
+// func NewVarFromStruct(token Token, structType LiteralType, value map[string]Expression) *VarLiteral {
+// 	return &VarLiteral{
+// 		Token:  token,
+// 		TypeOf: NewVarType(StructType),
+// 		Value:  value,
+// 	}
+// }
 
-// This is essentially the same thing as the block right now but it is callable
+// NewVarFromFunction returns a new function shadow-typed var
 func NewVarFromFunction(token Token, value Block) *VarLiteral {
 	return &VarLiteral{
 		Token:  token,

@@ -1,12 +1,22 @@
 package ast
 
+// Switch statements represents the following form:
+// `switch` { expression } [ case_block ]
 type Switch struct {
 	Token      Token
 	Expression Expression
-	Cases      []*Case
+	Cases      *CaseBlock
 	Default    Statement
 }
 
+// CaseBlock represents the following form:
+// `{` [ case ]* `}`
+type CaseBlock struct {
+	Cases []Case
+}
+
+// Case represents the following form:
+// `case` [ expression ] `:` [ block ]
 type Case struct {
 	Token      Token
 	Expression Expression

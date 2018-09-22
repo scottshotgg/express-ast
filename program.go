@@ -12,12 +12,14 @@ func (p *Program) Length() int {
 	return len(p.Files)
 }
 
+// NewProgram returns a new program
 func NewProgram() *Program {
 	return &Program{
 		Files: map[string]*File{},
 	}
 }
 
+// AddFile appends a file to the program
 func (p *Program) AddFile(f *File) {
 	p.Files[f.Name] = f
 }

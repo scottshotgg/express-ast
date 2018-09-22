@@ -1,5 +1,7 @@
 package ast
 
+// CBlock statement represents the following form:
+// `c {` [ statement ]* `}`
 type CBlock struct {
 	Token Token
 	Body  Block

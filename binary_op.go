@@ -45,3 +45,13 @@ func (b *BinaryOperation) expressionNode() {}
 
 // TokenLiteral returns the literal value of the token
 func (b *BinaryOperation) TokenLiteral() string { return b.Token.Literal }
+
+// NewBinaryOperation returns a BinaryOperation with the evaluation value
+func NewBinaryOperation(t Token, k BinaryOpType, l Expression, r Expression) *BinaryOperation {
+	return &BinaryOperation{
+		Token:     t,
+		Kind:      k,
+		LeftNode:  l,
+		RightNode: r,
+	}
+}
