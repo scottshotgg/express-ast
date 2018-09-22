@@ -21,15 +21,16 @@ func (i *Ident) TokenLiteral() string { return i.Token.Literal }
 // But I don't think identifiers here need to have a type, that's NOT what the AST is for; keep track of that in the parser, etc
 
 // NewIdent returns a new identifier
-func NewIdent(t Token, it Type, n string) (*Ident, error) {
+// func NewIdent(t Token, it Type, n string) (*Ident, error) {
+func NewIdent(t Token, n string) (*Ident, error) {
 	if n == "" {
 		return nil, errors.New("Cannot use empty string as identifier name")
 	}
 
 	return &Ident{
 		Token: t,
-		Type:  it,
-		Name:  n,
+		// Type:  it,
+		Name: n,
 	}, nil
 }
 
