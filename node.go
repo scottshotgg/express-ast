@@ -3,7 +3,8 @@ package ast
 type NodeType int
 
 const (
-	ArrayNode NodeType = iota + 1
+	AccessNode NodeType = iota + 1
+	ArrayNode
 	AssignmentNode
 	BinaryOperationNode
 	BlockNode
@@ -16,6 +17,7 @@ const (
 	IdentNode
 	IfElseNode
 	ImportNode
+	IndexNode
 	IterableNode
 	LiteralNode
 	LoopNode

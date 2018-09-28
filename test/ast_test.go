@@ -37,11 +37,11 @@ func TestAST(t *testing.T) {
 					&ast.Assignment{
 						Declaration: true,
 						Inferred:    true,
-						Ident: &ast.Ident{
+						Lhs: &ast.Ident{
 							Type: ast.NewFloatType(),
 							Name: "myAdder",
 						},
-						Value: &ast.Function{
+						Rhs: &ast.Function{
 							Name: "myFunction",
 							Arguments: &ast.Group{
 								Elements: []ast.Expression{

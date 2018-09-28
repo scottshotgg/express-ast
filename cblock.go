@@ -1,7 +1,12 @@
 package ast
 
+// C blocks fundamentally contain statements that cannot be checked
+// at compile time by the Express compiler. These statements will be
+// directly injected into the generated C++ source code that will
+// then be checked by Clang.
+
 // CBlock statement represents the following form:
-// `c {` [ statement ]* `}`
+// `c {` [ c_statement ]* `}`
 type CBlock struct {
 	Token Token
 	Body  Block

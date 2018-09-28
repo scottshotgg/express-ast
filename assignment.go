@@ -23,8 +23,9 @@ type Assignment struct {
 	Inferred    bool
 	Token       Token
 	Type        AssignmentType
-	Ident       *Ident
-	Value       Expression
+	// For now put Expression here but I think this should be a type `Assignable` where an Expression implements an `Assignable` property
+	Lhs Expression
+	Rhs Expression
 }
 
 // When going through the logic for this:
@@ -53,9 +54,9 @@ func NewAssignment(t Token, i *Ident, at AssignmentType, e Expression) (*Assignm
 
 	as := Assignment{
 		Token: t,
-		Ident: i,
 		Type:  at,
-		Value: e,
+		Lhs:   i,
+		Rhs:   e,
 	}
 
 	if at == Init {
