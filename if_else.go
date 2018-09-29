@@ -1,9 +1,11 @@
 package ast
 
+import "github.com/scottshotgg/express-token"
+
 // IfElse represents the following form:
 // if [ condition ] [ block ] { [ else ] [ statement ] }
 type IfElse struct {
-	Token         Token
+	Token         token.Token
 	IfCondition   *Condition
 	If            *Block
 	ElseCondition *Condition
@@ -16,6 +18,6 @@ func (ie *IfElse) statementNode()     {}
 func (ie *IfElse) elseStatementNode() {}
 
 // TokenLiteral returns the literal value of the token
-func (ie *IfElse) TokenLiteral() string { return ie.Token.Literal }
+func (ie *IfElse) TokenLiteral() token.Token { return ie.Token }
 
 func (ie *IfElse) Kind() NodeType { return IfElseNode }

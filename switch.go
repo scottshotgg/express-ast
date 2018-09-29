@@ -1,9 +1,11 @@
 package ast
 
+import "github.com/scottshotgg/express-token"
+
 // Switch statements represents the following form:
 // `switch` { expression } [ case_block ]
 type Switch struct {
-	Token      Token
+	Token      token.Token
 	Expression Expression
 	Cases      *CaseBlock
 	Default    Statement
@@ -18,7 +20,7 @@ type CaseBlock struct {
 // Case represents the following form:
 // `case` [ expression ] `:` [ block ]
 type Case struct {
-	Token      Token
+	Token      token.Token
 	Expression Expression
 	Body       Statement
 }
@@ -28,6 +30,6 @@ type Case struct {
 func (s *Switch) statementNode() {}
 
 // TokenLiteral returns the literal value of the token
-func (s *Switch) TokenLiteral() string { return s.Token.Literal }
+func (s *Switch) TokenLiteral() token.Token { return s.Token }
 
 func (s *Switch) Kind() NodeType { return SwitchNode }

@@ -1,5 +1,7 @@
 package ast
 
+import "github.com/scottshotgg/express-token"
+
 // ConditionType encompasses all types of conditions
 type ConditionType int
 
@@ -47,7 +49,7 @@ const (
 // Condition represents an expression that always evaluates to a boolean value:
 // [ expression ] [ condition_op ] [ expression ]
 type Condition struct {
-	Token Token
+	Token token.Token
 	Type  ConditionType
 	Left  *Expression
 	Right *Expression
@@ -57,6 +59,6 @@ type Condition struct {
 func (c *Condition) expressionNode() {}
 
 // TokenLiteral returns the literal value of the token
-func (c *Condition) TokenLiteral() string { return c.Token.Literal }
+func (c *Condition) TokenLiteral() token.Token { return c.Token }
 
 func (c *Condition) Kind() NodeType { return ConditionNode }

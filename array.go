@@ -1,8 +1,10 @@
 package ast
 
+import "github.com/scottshotgg/express-token"
+
 // Array represents array type data structures
 type Array struct {
-	Token Token
+	Token token.Token
 	// How will this act with `var` elements?
 	TypeOf LiteralType
 	Length int
@@ -11,7 +13,7 @@ type Array struct {
 func (a *Array) expressionNode() {}
 
 // TokenLiteral returns the literal value of the token
-func (a *Array) TokenLiteral() string { return a.Token.Literal }
+func (a *Array) TokenLiteral() token.Token { return a.Token }
 
 // Type implements Literal
 func (a *Array) Type() LiteralType { return a.TypeOf }

@@ -1,5 +1,7 @@
 package ast
 
+import "github.com/scottshotgg/express-token"
+
 type NodeType int
 
 const (
@@ -44,7 +46,7 @@ type Location struct {
 // Node is an abstract type that is used to recursively define the AST
 type Node interface {
 	// TODO: this will just be a string for now until I rework the lexer
-	TokenLiteral() string
+	TokenLiteral() token.Token
 
 	Kind() NodeType
 

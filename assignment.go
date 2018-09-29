@@ -1,6 +1,10 @@
 package ast
 
-import "errors"
+import (
+	"errors"
+
+	"github.com/scottshotgg/express-token"
+)
 
 // AssignmentType encompasses the different types of assignment
 type AssignmentType int
@@ -21,7 +25,7 @@ const (
 type Assignment struct {
 	Declaration bool
 	Inferred    bool
-	Token       Token
+	Token       token.Token
 	Type        AssignmentType
 	// For now put Expression here but I think this should be a type `Assignable` where an Expression implements an `Assignable` property
 	Lhs Expression
@@ -35,7 +39,7 @@ type Assignment struct {
 func (a *Assignment) statementNode() {}
 
 // TokenLiteral returns the literal value of the token
-func (a *Assignment) TokenLiteral() string { return a.Token.Literal }
+func (a *Assignment) TokenLiteral() token.Token { return a.Token }
 
 func (a *Assignment) Kind() NodeType { return AssignmentNode }
 
@@ -47,7 +51,7 @@ func (a *Assignment) Kind() NodeType { return AssignmentNode }
 // }
 
 // NewAssignment returns a new assignment statement and determines whether it is inferred
-func NewAssignment(t Token, i *Ident, at AssignmentType, e Expression) (*Assignment, error) {
+func NewAssignment(t token.Token, i *Ident, at AssignmentType, e Expression) (*Assignment, error) {
 	if e == nil {
 		return nil, errors.New("Expression value cannot by nil")
 	}

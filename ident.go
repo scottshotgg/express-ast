@@ -2,12 +2,14 @@ package ast
 
 import (
 	"errors"
+
+	"github.com/scottshotgg/express-token"
 )
 
 // Ident represents the following form:
 // [ name ]
 type Ident struct {
-	Token Token
+	Token token.Token
 	Type  Type
 	Name  string
 }
@@ -15,7 +17,7 @@ type Ident struct {
 func (i *Ident) expressionNode() {}
 
 // TokenLiteral returns the literal value of the token
-func (i *Ident) TokenLiteral() string { return i.Token.Literal }
+func (i *Ident) TokenLiteral() token.Token { return i.Token }
 
 func (i *Ident) Kind() NodeType { return IdentNode }
 
@@ -23,8 +25,8 @@ func (i *Ident) Kind() NodeType { return IdentNode }
 // But I don't think identifiers here need to have a type, that's NOT what the AST is for; keep track of that in the parser, etc
 
 // NewIdent returns a new identifier
-// func NewIdent(t Token, it Type, n string) (*Ident, error) {
-func NewIdent(t Token, n string) (*Ident, error) {
+// func NewIdent(t token.Token, it Type, n string) (*Ident, error) {
+func NewIdent(t token.Token, n string) (*Ident, error) {
 	if n == "" {
 		return nil, errors.New("Cannot use empty string as identifier name")
 	}
@@ -37,7 +39,7 @@ func NewIdent(t Token, n string) (*Ident, error) {
 }
 
 // NewIntIdent returns a new identifier for an int type
-func NewIntIdent(t Token, n string) (*Ident, error) {
+func NewIntIdent(t token.Token, n string) (*Ident, error) {
 	if n == "" {
 		return nil, errors.New("Cannot use empty string as identifier name")
 	}
@@ -50,7 +52,7 @@ func NewIntIdent(t Token, n string) (*Ident, error) {
 }
 
 // NewBoolIdent returns a new identifier for an bool type
-func NewBoolIdent(t Token, n string) (*Ident, error) {
+func NewBoolIdent(t token.Token, n string) (*Ident, error) {
 	if n == "" {
 		return nil, errors.New("Cannot use empty string as identifier name")
 	}
@@ -63,7 +65,7 @@ func NewBoolIdent(t Token, n string) (*Ident, error) {
 }
 
 // NewFloatIdent returns a new identifier for an float type
-func NewFloatIdent(t Token, n string) (*Ident, error) {
+func NewFloatIdent(t token.Token, n string) (*Ident, error) {
 	if n == "" {
 		return nil, errors.New("Cannot use empty string as identifier name")
 	}
@@ -76,7 +78,7 @@ func NewFloatIdent(t Token, n string) (*Ident, error) {
 }
 
 // NewCharIdent returns a new identifier for an char type
-func NewCharIdent(t Token, n string) (*Ident, error) {
+func NewCharIdent(t token.Token, n string) (*Ident, error) {
 	if n == "" {
 		return nil, errors.New("Cannot use empty string as identifier name")
 	}
@@ -89,7 +91,7 @@ func NewCharIdent(t Token, n string) (*Ident, error) {
 }
 
 // NewStringIdent returns a new identifier for an string type
-func NewStringIdent(t Token, n string) (*Ident, error) {
+func NewStringIdent(t token.Token, n string) (*Ident, error) {
 	if n == "" {
 		return nil, errors.New("Cannot use empty string as identifier name")
 	}
@@ -101,7 +103,7 @@ func NewStringIdent(t Token, n string) (*Ident, error) {
 	}, nil
 }
 
-// func NewStructIdent(t Token, n string) (*Ident, error) {
+// func NewStructIdent(t token.Token, n string) (*Ident, error) {
 // 	if n == "" {
 // 		return nil, errors.New("Cannot use empty string as identifier name")
 // 	}
@@ -114,7 +116,7 @@ func NewStringIdent(t Token, n string) (*Ident, error) {
 // }
 
 // NewObjectIdent returns a new identifier for an object type
-func NewObjectIdent(t Token, n string) (*Ident, error) {
+func NewObjectIdent(t token.Token, n string) (*Ident, error) {
 	if n == "" {
 		return nil, errors.New("Cannot use empty string as identifier name")
 	}
@@ -127,7 +129,7 @@ func NewObjectIdent(t Token, n string) (*Ident, error) {
 }
 
 // NewFunctionIdent returns a new identifier for an function type
-func NewFunctionIdent(t Token, n string) (*Ident, error) {
+func NewFunctionIdent(t token.Token, n string) (*Ident, error) {
 	if n == "" {
 		return nil, errors.New("Cannot use empty string as identifier name")
 	}
@@ -139,7 +141,7 @@ func NewFunctionIdent(t Token, n string) (*Ident, error) {
 	}, nil
 }
 
-// func NewVarIdent(t Token, n string) (*Ident, error) {
+// func NewVarIdent(t token.Token, n string) (*Ident, error) {
 // 	if n == "" {
 // 		return nil, errors.New("Cannot use empty string as identifier name")
 // 	}

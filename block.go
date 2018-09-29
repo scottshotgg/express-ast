@@ -1,5 +1,7 @@
 package ast
 
+import "github.com/scottshotgg/express-token"
+
 // If we want to allow objects to contain statements in Express objects,
 // then we would need to implement Blocks as an ExpressionStatement
 
@@ -8,7 +10,7 @@ package ast
 // Block statement represents the following form:
 // `{` [ statement ]* `}`
 type Block struct {
-	Token      Token
+	Token      token.Token
 	Statements []Statement
 
 	// TODO: Need to solve where this goes. I think it should go in the parser information,
@@ -22,7 +24,7 @@ func (b *Block) expressionNode()    {}
 func (b *Block) elseStatementNode() {}
 
 // TokenLiteral returns the literal value of the token
-func (b *Block) TokenLiteral() string { return b.Token.Literal }
+func (b *Block) TokenLiteral() token.Token { return b.Token }
 
 // Length returns the length of statments in the block
 func (b *Block) Length() int { return len(b.Statements) }

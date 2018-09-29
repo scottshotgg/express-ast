@@ -1,5 +1,7 @@
 package ast
 
+import "github.com/scottshotgg/express-token"
+
 // C blocks fundamentally contain statements that cannot be checked
 // at compile time by the Express compiler. These statements will be
 // directly injected into the generated C++ source code that will
@@ -8,7 +10,7 @@ package ast
 // CBlock statement represents the following form:
 // `c {` [ c_statement ]* `}`
 type CBlock struct {
-	Token Token
+	Token token.Token
 	Body  Block
 }
 
@@ -17,6 +19,6 @@ type CBlock struct {
 func (c *CBlock) statementNode() {}
 
 // TokenLiteral returns the literal value of the token
-func (c *CBlock) TokenLiteral() string { return c.Token.Literal }
+func (c *CBlock) TokenLiteral() token.Token { return c.Token }
 
 func (c *CBlock) Kind() NodeType { return CBlockNode }

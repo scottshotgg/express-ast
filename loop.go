@@ -1,5 +1,7 @@
 package ast
 
+import "github.com/scottshotgg/express-token"
+
 // LoopType encompasses all types of loops
 type LoopType int
 
@@ -38,7 +40,7 @@ const (
 // Loop represents the following form:
 // [ loop_type ] { iterable } [ block ]
 type Loop struct {
-	Token Token
+	Token token.Token
 	Type  LoopType
 	Start int
 	End   int

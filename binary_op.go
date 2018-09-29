@@ -1,6 +1,9 @@
 package ast
 
-import "github.com/pkg/errors"
+import (
+	"github.com/pkg/errors"
+	"github.com/scottshotgg/express-token"
+)
 
 // BinaryOpType encompasses the types of binary operations
 type BinaryOpType int
@@ -31,7 +34,7 @@ const (
 // BinaryOperation represents the following form:
 // [ expression ] [ binary_op ] [ expression ]
 type BinaryOperation struct {
-	Token     Token
+	Token     token.Token
 	Op        BinaryOpType
 	LeftNode  Expression
 	RightNode Expression
@@ -46,12 +49,12 @@ type BinaryOperation struct {
 func (b *BinaryOperation) expressionNode() {}
 
 // TokenLiteral returns the literal value of the token
-func (b *BinaryOperation) TokenLiteral() string { return b.Token.Literal }
+func (b *BinaryOperation) TokenLiteral() token.Token { return b.Token }
 
 func (b *BinaryOperation) Kind() NodeType { return BinaryOperationNode }
 
 // NewBinaryOperation returns a BinaryOperation with the evaluation value
-func NewBinaryOperation(t Token, binOpString string, l Expression, r Expression) (*BinaryOperation, error) {
+func NewBinaryOperation(t token.Token, binOpString string, l Expression, r Expression) (*BinaryOperation, error) {
 	var k BinaryOpType
 
 	switch binOpString {

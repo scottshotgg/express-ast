@@ -1,5 +1,7 @@
 package ast
 
+import "github.com/scottshotgg/express-token"
+
 // Literal is an abstract type that represents a literal value, in constrast with a value-producer, such as an expression
 type Literal interface {
 	Expression
@@ -10,7 +12,7 @@ type Literal interface {
 
 // IntLiteral represents any non floating-point number
 type IntLiteral struct {
-	Token  Token
+	Token  token.Token
 	TypeOf Type
 	Value  int
 }
@@ -18,7 +20,7 @@ type IntLiteral struct {
 func (il *IntLiteral) expressionNode() {}
 
 // TokenLiteral returns the literal value of the token
-func (il *IntLiteral) TokenLiteral() string { return il.Token.Literal }
+func (il *IntLiteral) TokenLiteral() token.Token { return il.Token }
 
 // Type implements literal
 func (il *IntLiteral) Type() Type { return il.TypeOf }
@@ -27,7 +29,7 @@ func (il *IntLiteral) Kind() NodeType { return LiteralNode }
 
 // BoolLiteral represents a variable that is restricted to either a true or false value
 type BoolLiteral struct {
-	Token  Token
+	Token  token.Token
 	TypeOf Type
 	Value  bool
 }
@@ -35,7 +37,7 @@ type BoolLiteral struct {
 func (bl *BoolLiteral) expressionNode() {}
 
 // TokenLiteral returns the literal value of the token
-func (bl *BoolLiteral) TokenLiteral() string { return bl.Token.Literal }
+func (bl *BoolLiteral) TokenLiteral() token.Token { return bl.Token }
 
 // Type implements literal
 func (bl *BoolLiteral) Type() Type { return bl.TypeOf }
@@ -44,7 +46,7 @@ func (bl *BoolLiteral) Kind() NodeType { return LiteralNode }
 
 // FloatLiteral represents any floating point number
 type FloatLiteral struct {
-	Token  Token
+	Token  token.Token
 	TypeOf Type
 	Value  float64
 }
@@ -52,7 +54,7 @@ type FloatLiteral struct {
 func (fl *FloatLiteral) expressionNode() {}
 
 // TokenLiteral returns the literal value of the token
-func (fl *FloatLiteral) TokenLiteral() string { return fl.Token.Literal }
+func (fl *FloatLiteral) TokenLiteral() token.Token { return fl.Token }
 
 // Type implements literal
 func (fl *FloatLiteral) Type() Type { return fl.TypeOf }
@@ -62,7 +64,7 @@ func (fl *FloatLiteral) Kind() NodeType { return LiteralNode }
 // CharLiteral represents a single-character capped string:
 // `'` [ _single_character_ ] `'`
 type CharLiteral struct {
-	Token  Token
+	Token  token.Token
 	TypeOf Type
 	Value  rune
 }
@@ -70,7 +72,7 @@ type CharLiteral struct {
 func (cl *CharLiteral) expressionNode() {}
 
 // TokenLiteral returns the literal value of the token
-func (cl *CharLiteral) TokenLiteral() string { return cl.Token.Literal }
+func (cl *CharLiteral) TokenLiteral() token.Token { return cl.Token }
 
 // Type implements literal
 func (cl *CharLiteral) Type() Type { return cl.TypeOf }
@@ -81,7 +83,7 @@ func (cl *CharLiteral) Kind() NodeType { return LiteralNode }
 // TODO: how to do a backtick quoted body of text
 // `"` [ _text_ ] `"`
 type StringLiteral struct {
-	Token  Token
+	Token  token.Token
 	TypeOf Type
 	Value  string
 }
@@ -89,7 +91,7 @@ type StringLiteral struct {
 func (sl *StringLiteral) expressionNode() {}
 
 // TokenLiteral returns the literal value of the token
-func (sl *StringLiteral) TokenLiteral() string { return sl.Token.Literal }
+func (sl *StringLiteral) TokenLiteral() token.Token { return sl.Token }
 
 // Type implements literal
 func (sl *StringLiteral) Type() Type { return sl.TypeOf }
@@ -98,7 +100,7 @@ func (sl *StringLiteral) Kind() NodeType { return LiteralNode }
 
 // VarLiteral represents a dynamically typed variable; it can hold anything
 type VarLiteral struct {
-	Token  Token
+	Token  token.Token
 	TypeOf Type
 	// TODO: could either do it this way or this can reference another literal type
 	Value interface{}
@@ -107,7 +109,7 @@ type VarLiteral struct {
 func (vl *VarLiteral) expressionNode() {}
 
 // TokenLiteral returns the literal value of the token
-func (vl *VarLiteral) TokenLiteral() string { return vl.Token.Literal }
+func (vl *VarLiteral) TokenLiteral() token.Token { return vl.Token }
 
 // Type implements literal
 func (vl *VarLiteral) Type() Type { return vl.TypeOf }
@@ -116,7 +118,7 @@ func (vl *VarLiteral) Kind() NodeType { return LiteralNode }
 
 // ObjectLiteral represents a named block : this produces a variable
 type ObjectLiteral struct {
-	Token  Token
+	Token  token.Token
 	TypeOf Type
 	// TODO: could either do it this way or make block implement literal and then it can be directly used as a literal
 	Value Block
@@ -128,7 +130,7 @@ type ObjectLiteral struct {
 func (ol *ObjectLiteral) expressionNode() {}
 
 // TokenLiteral returns the literal value of the token
-func (ol *ObjectLiteral) TokenLiteral() string { return ol.Token.Literal }
+func (ol *ObjectLiteral) TokenLiteral() token.Token { return ol.Token }
 
 // Type implements literal
 func (ol *ObjectLiteral) Type() Type { return ol.TypeOf }
@@ -139,7 +141,7 @@ func (ol *ObjectLiteral) Kind() NodeType { return LiteralNode }
 // TODO: this might need to be moved to the type.go file
 // FIXME: this might need to be fixed or something
 type StructLiteral struct {
-	Token  Token
+	Token  token.Token
 	TypeOf Type
 	Value  map[string]Expression
 }
@@ -147,7 +149,7 @@ type StructLiteral struct {
 func (sl *StructLiteral) expressionNode() {}
 
 // TokenLiteral returns the literal value of the token
-func (sl *StructLiteral) TokenLiteral() string { return sl.Token.Literal }
+func (sl *StructLiteral) TokenLiteral() token.Token { return sl.Token }
 
 // Type implements literal
 func (sl *StructLiteral) Type() Type { return sl.TypeOf }
@@ -156,7 +158,7 @@ func (sl *StructLiteral) Kind() NodeType { return LiteralNode }
 
 // FunctionLiteral represents a named object : this produces a type
 type FunctionLiteral struct {
-	Token  Token
+	Token  token.Token
 	TypeOf Type
 	// TODO: could either do it this way or make block implement literal and then it can be directly used as a literal
 
@@ -167,7 +169,7 @@ type FunctionLiteral struct {
 func (fl *FunctionLiteral) expressionNode() {}
 
 // TokenLiteral returns the literal value of the token
-func (fl *FunctionLiteral) TokenLiteral() string { return fl.Token.Literal }
+func (fl *FunctionLiteral) TokenLiteral() token.Token { return fl.Token }
 
 // Type implements literal
 func (fl *FunctionLiteral) Type() Type { return fl.TypeOf }
@@ -179,59 +181,59 @@ func (fl *FunctionLiteral) Kind() NodeType { return LiteralNode }
 // }
 
 // NewInt returns a new int literal
-func NewInt(token Token, value int) *IntLiteral {
+func NewInt(t token.Token, value int) *IntLiteral {
 	return &IntLiteral{
-		Token:  token,
+		Token:  t,
 		TypeOf: NewIntType(),
 		Value:  value,
 	}
 }
 
 // Make this take a type and initialize the default from the default map
-// func NewDefault(token Token) *IntLiteral {
+// func NewDefault(t token.Token) *IntLiteral {
 // 	return NewIntFromValue(token, 0)
 // }
 
 // NewBool returns a new bool literal
-func NewBool(token Token, value bool) *BoolLiteral {
+func NewBool(t token.Token, value bool) *BoolLiteral {
 	return &BoolLiteral{
-		Token:  token,
+		Token:  t,
 		TypeOf: NewBoolType(),
 		Value:  value,
 	}
 }
 
 // NewFloat returns a new float literal
-func NewFloat(token Token, value float64) *FloatLiteral {
+func NewFloat(t token.Token, value float64) *FloatLiteral {
 	return &FloatLiteral{
-		Token:  token,
+		Token:  t,
 		TypeOf: NewFloatType(),
 		Value:  value,
 	}
 }
 
 // NewChar returns a new char literal
-func NewChar(token Token, value rune) *CharLiteral {
+func NewChar(t token.Token, value rune) *CharLiteral {
 	return &CharLiteral{
-		Token:  token,
+		Token:  t,
 		TypeOf: NewCharType(),
 		Value:  value,
 	}
 }
 
 // NewString returns a new string literal
-func NewString(token Token, value string) *StringLiteral {
+func NewString(t token.Token, value string) *StringLiteral {
 	return &StringLiteral{
-		Token:  token,
+		Token:  t,
 		TypeOf: NewStringType(),
 		Value:  value,
 	}
 }
 
 // NewStruct returns a new struct literal
-func NewStruct(token Token, structType LiteralType, value map[string]Expression) *StructLiteral {
+func NewStruct(t token.Token, structType LiteralType, value map[string]Expression) *StructLiteral {
 	return &StructLiteral{
-		Token:  token,
+		Token:  t,
 		TypeOf: NewStructType(structType),
 
 		// This is for the properties of the struct, but somehow we probably need to have a
@@ -241,81 +243,81 @@ func NewStruct(token Token, structType LiteralType, value map[string]Expression)
 }
 
 // NewObject returns a new object literal
-func NewObject(token Token, value Block) *ObjectLiteral {
+func NewObject(t token.Token, value Block) *ObjectLiteral {
 	return &ObjectLiteral{
-		Token:  token,
+		Token:  t,
 		TypeOf: NewObjectType(),
 		Value:  value,
 	}
 }
 
 // NewVarFromInt returns a new int shadow-typed var
-func NewVarFromInt(token Token, value int) *VarLiteral {
+func NewVarFromInt(t token.Token, value int) *VarLiteral {
 	return &VarLiteral{
-		Token:  token,
+		Token:  t,
 		TypeOf: NewVarType(IntType),
 		Value:  value,
 	}
 }
 
 // NewVarFromBool returns a new bool shadow-typed var
-func NewVarFromBool(token Token, value bool) *VarLiteral {
+func NewVarFromBool(t token.Token, value bool) *VarLiteral {
 	return &VarLiteral{
-		Token:  token,
+		Token:  t,
 		TypeOf: NewVarType(BoolType),
 		Value:  value,
 	}
 }
 
 // NewVarFromFloat returns a new float shadow-typed var
-func NewVarFromFloat(token Token, value float64) *VarLiteral {
+func NewVarFromFloat(t token.Token, value float64) *VarLiteral {
 	return &VarLiteral{
-		Token:  token,
+		Token:  t,
 		TypeOf: NewVarType(FloatType),
 		Value:  value,
 	}
 }
 
 // NewVarFromChar returns a new char shadow-typed var
-func NewVarFromChar(token Token, value rune) *VarLiteral {
+func NewVarFromChar(t token.Token, value rune) *VarLiteral {
 	return &VarLiteral{
-		Token:  token,
+		Token:  t,
 		TypeOf: NewVarType(CharType),
 		Value:  value,
 	}
 }
 
 // NewVarFromString returns a new string shadow-typed var
-func NewVarFromString(token Token, value string) *VarLiteral {
+func NewVarFromString(t token.Token, value string) *VarLiteral {
 	return &VarLiteral{
-		Token:  token,
+		Token:  t,
 		TypeOf: NewVarType(StringType),
 		Value:  value,
 	}
 }
 
 // NewVarFromObject returns a new object shadow-typed var
-func NewVarFromObject(token Token, value Block) *VarLiteral {
+func NewVarFromObject(t token.Token, value Block) *VarLiteral {
 	return &VarLiteral{
-		Token:  token,
+		Token:  t,
 		TypeOf: NewVarType(ObjectType),
 		Value:  value,
 	}
 }
 
 // // NewVarFromStruct returns a new struct shadow-typed var
-// func NewVarFromStruct(token Token, structType LiteralType, value map[string]Expression) *VarLiteral {
+// func NewVarFromStruct(t token.Token, structType LiteralType, value map[string]Expression) *VarLiteral {
 // 	return &VarLiteral{
-// 		Token:  token,
+// 		Token: t,
 // 		TypeOf: NewVarType(StructType),
 // 		Value:  value,
 // 	}
 // }
 
 // NewVarFromFunction returns a new function shadow-typed var
-func NewVarFromFunction(token Token, value Block) *VarLiteral {
+func NewVarFromFunction(t token.Token, value Block) *VarLiteral {
 	return &VarLiteral{
-		Token:  token,
+		Token:  t,
 		TypeOf: NewVarType(FunctionType),
 		Value:  value,
 	}

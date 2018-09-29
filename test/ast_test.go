@@ -7,6 +7,7 @@ import (
 
 	"github.com/davecgh/go-spew/spew"
 	"github.com/scottshotgg/express-ast"
+	"github.com/scottshotgg/express-token"
 )
 
 var (
@@ -45,8 +46,8 @@ func TestAST(t *testing.T) {
 							Name: "myFunction",
 							Arguments: &ast.Group{
 								Elements: []ast.Expression{
-									ast.NewInt(ast.Token{}, 0),
-									ast.NewFloat(ast.Token{}, 0),
+									ast.NewInt(token.Token{}, 0),
+									ast.NewFloat(token.Token{}, 0),
 								},
 							},
 							Returns: &ast.Group{
