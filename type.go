@@ -130,7 +130,7 @@ func NewVarType(lt LiteralType) Type {
 		Name:       "var",
 		Type:       VarType,
 		ShadowType: &lt,
-		UpgradesTo: UpgradableTypesMap[lt],
+		// UpgradesTo: UpgradableTypesMap[lt],
 	}
 }
 

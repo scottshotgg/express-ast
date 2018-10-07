@@ -397,13 +397,10 @@ func (a *ASTBuilder) GetStatement() (Statement, error) {
 		// however, a block should be able to be parsed for an expression as well
 		return a.GetBlock()
 
-	// 	// This one will have to be figured out when parsing the ident
-	// case token.Call:
-
 	// TODO: break this out into the individual keywords
 	// - switch, etc
-	// case token.Keyword:
-	// 	// switch
+	case token.Keyword:
+		return nil, errors.Errorf("token.Keyword statements are not implemented yet %+v", currentToken)
 
 	case token.Function:
 		// Next things we look for after the Function token is:
@@ -438,7 +435,6 @@ func (a *ASTBuilder) GetStatement() (Statement, error) {
 
 		return NewFunction(functionToken, identToken, args, block)
 
-	// 	// TODO: create this token
 	case token.If:
 		// TODO:
 		// look for a conditional/expression
@@ -616,38 +612,68 @@ func CompressTokens(lexTokens []token.Token) ([]token.Token, error) {
 
 	alreadyChecked := false
 
-	for i := 0; i < len(lexTokens)-1; i++ {
-		fmt.Println("i", lexTokens[i])
+	// Combine operators
+	for i := 0; i < len(lexTokens); i++ {
+		fmt.Printf("%+v\n", lexTokens[i])
 
-		// This needs to be simplified
-		if lexTokens[i].Type == "ASSIGN" || lexTokens[i].Type == "SEC_OP" || lexTokens[i].Type == "PRI_OP" && lexTokens[i+1].Type == "ASSIGN" || lexTokens[i+1].Type == "SEC_OP" || lexTokens[i+1].Type == "PRI_OP" {
-			compressedToken, ok := token.TokenMap[lexTokens[i].Value.String+lexTokens[i+1].Value.String]
-			fmt.Println("added \"" + lexTokens[i].Value.String + lexTokens[i+1].Value.String + "\"")
-			if ok {
-				compressedTokens = append(compressedTokens, compressedToken)
-				i++
+		currentToken := lexTokens[i]
 
-				// If we were able to combine the last two tokens and make a new one, mark it
-				if i == len(lexTokens)-1 {
-					alreadyChecked = true
+		if i < len(lexTokens)-1 {
+			nextToken := lexTokens[i+1]
+
+			// This needs to be simplified
+			if currentToken.Type == token.Assign || currentToken.Type == token.SecOp || currentToken.Type == token.PriOp && nextToken.Type == token.Assign || nextToken.Type == token.SecOp || nextToken.Type == token.PriOp {
+				compressedToken, ok := token.TokenMap[currentToken.Value.String+nextToken.Value.String]
+				// fmt.Println("added \"" + lexTokens[i].Value.String + nextToken.Value.String + "\"")
+				if ok {
+					compressedTokens = append(compressedTokens, compressedToken)
+					i++
+
+					// If we were able to combine the last two tokens and make a new one, mark it
+					if i == len(lexTokens)-1 {
+						alreadyChecked = true
+					}
+
+					continue
 				}
-
-				continue
 			}
-		}
-
-		// Filter out the white space
-		if lexTokens[i].Type == "WS" {
-			continue
 		}
 
 		compressedTokens = append(compressedTokens, lexTokens[i])
 	}
 
 	// If it hasn't been already checked and the last token is not a white space, then append it
-	if !alreadyChecked && lexTokens[len(lexTokens)-1].Type != "WS" {
+	if !alreadyChecked && lexTokens[len(lexTokens)-1].Type != token.Whitespace {
 		compressedTokens = append(compressedTokens, lexTokens[len(lexTokens)-1])
 	}
 
-	return compressedTokens, nil
+	compressedTokens2 := []token.Token{}
+	// Combine array type tokens
+	for i := 0; i < len(compressedTokens); i++ {
+		currentToken := compressedTokens[i]
+
+		if i < len(compressedTokens)-2 {
+			nextToken := compressedTokens[i+1]
+			nextNextToken := compressedTokens[i+2]
+
+			if currentToken.Type == token.Type && nextToken.Type == token.LBracket && nextNextToken.Type == token.RBracket {
+				currentToken.Value.String += "[]"
+				currentToken.Value.Type += "[]"
+
+				i += 2
+			}
+		}
+
+		compressedTokens2 = append(compressedTokens2, currentToken)
+	}
+
+	compressedTokens3 := []token.Token{}
+	// Filter out the white space
+	for i := 0; i < len(compressedTokens2); i++ {
+		if compressedTokens2[i].Type != token.Whitespace {
+			compressedTokens3 = append(compressedTokens3, compressedTokens2[i])
+		}
+	}
+
+	return compressedTokens3, nil
 }

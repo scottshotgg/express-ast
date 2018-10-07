@@ -10,7 +10,7 @@ type Call struct {
 	Token     token.Token
 	Ident     *Ident
 	Arguments *Group
-	Returns   []Expression
+	Returns   *Group
 }
 
 func (c *Call) expressionNode() {}

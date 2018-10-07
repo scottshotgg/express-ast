@@ -47,6 +47,9 @@ func NewIdent(t token.Token, it string) (*Ident, error) {
 	case "string":
 		return NewStringIdent(t)
 
+	case "var":
+		return NewVarIdent(t)
+
 	default:
 		return &Ident{
 			Token: t,
@@ -159,14 +162,15 @@ func NewFunctionIdent(t token.Token) (*Ident, error) {
 	}, nil
 }
 
-// func NewVarIdent(t token.Token) (*Ident, error) {
-// 	if t.Value.String == "" {
-// 		return nil, errors.New("Cannot use empty string as identifier name")
-// 	}
+func NewVarIdent(t token.Token) (*Ident, error) {
+	if t.Value.String == "" {
+		return nil, errors.New("Cannot use empty string as identifier name")
+	}
 
-// 	return &Ident{
-// 		Token: t,
-// 		TypeOf:  NewVarType(),
-// 		Name:  n,
-// 	}, nil
-// }
+	return &Ident{
+		Token: t,
+		// Set the var type to nothing; "0"
+		TypeOf: NewVarType(0),
+		Name:   t.Value.String,
+	}, nil
+}
