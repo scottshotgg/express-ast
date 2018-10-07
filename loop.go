@@ -6,10 +6,12 @@ import "github.com/scottshotgg/express-token"
 type LoopType int
 
 const (
+	_ LoopType = iota
+
 	// StdFor is a standard for loop containing a condition and expression
 	// operating around a declared variable:
 	// `for` [ statement ] [ condition ] [ expression ] [ block ]
-	StdFor LoopType = iota + 1
+	StdFor
 
 	// ForEver is the result of a blank StdFor loop:
 	// `for` [ block ]
@@ -42,12 +44,18 @@ const (
 type Loop struct {
 	Token token.Token
 	Type  LoopType
-	Start int
-	End   int
-	Step  int
+	Init  Statement
+	Cond  Expression
+	Post  Expression
 	Body  *Block
 	Iter  *Iterable
 	Temps map[string]*Ident
 }
+
+// Implement expression
+func (l *Loop) statementNode() {}
+
+// TokenLiteral returns the literal value of the token
+func (l *Loop) TokenLiteral() token.Token { return l.Token }
 
 func (l *Loop) Kind() NodeType { return LoopNode }

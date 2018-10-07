@@ -24,6 +24,8 @@ const (
 	// GreaterThanOrEqual is the >= operator
 	GreaterThanOrEqual
 
+	// TODO: not sure if this should be here...
+	// it does produce a conditional, but it is also a unary operator
 	// Not is the ! operator
 	Not
 
@@ -51,8 +53,8 @@ const (
 type Condition struct {
 	Token token.Token
 	Type  ConditionType
-	Left  *Expression
-	Right *Expression
+	Left  Expression
+	Right Expression
 	Value bool
 }
 

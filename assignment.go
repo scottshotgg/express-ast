@@ -28,8 +28,8 @@ type Assignment struct {
 	Token       token.Token
 	Type        AssignmentType
 	// For now put Expression here but I think this should be a type `Assignable` where an Expression implements an `Assignable` property
-	Lhs Expression
-	Rhs Expression
+	LHS Expression
+	RHS Expression
 }
 
 // When going through the logic for this:
@@ -51,20 +51,32 @@ func (a *Assignment) Kind() NodeType { return AssignmentNode }
 // }
 
 // NewAssignment returns a new assignment statement and determines whether it is inferred
-func NewAssignment(t token.Token, i *Ident, at AssignmentType, e Expression) (*Assignment, error) {
+func NewAssignment(t token.Token, i *Ident, e Expression) (*Assignment, error) {
 	if e == nil {
 		return nil, errors.New("Expression value cannot by nil")
 	}
 
 	as := Assignment{
 		Token: t,
-		Type:  at,
-		Lhs:   i,
-		Rhs:   e,
+		LHS:   i,
+		RHS:   e,
 	}
 
-	if at == Init {
+	switch t.Value.String {
+	case ":=":
+		as.Type = Init
+		as.Declaration = true
 		as.Inferred = true
+
+	case ":":
+		as.Type = Set
+		as.Declaration = true
+
+	case "=":
+		as.Type = Equals
+
+	default:
+		return nil, errors.New("Could not detect assingment type from token")
 	}
 
 	return &as, nil

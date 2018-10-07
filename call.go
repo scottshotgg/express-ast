@@ -9,7 +9,7 @@ import "github.com/scottshotgg/express-token"
 type Call struct {
 	Token     token.Token
 	Ident     *Ident
-	Arguments []Expression
+	Arguments *Group
 	Returns   []Expression
 }
 

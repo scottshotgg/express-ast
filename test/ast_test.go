@@ -39,8 +39,8 @@ func TestAST(t *testing.T) {
 						Declaration: true,
 						Inferred:    true,
 						Lhs: &ast.Ident{
-							Type: ast.NewFloatType(),
-							Name: "myAdder",
+							TypeOf: ast.NewFloatType(),
+							Name:   "myAdder",
 						},
 						Rhs: &ast.Function{
 							Name: "myFunction",
@@ -55,7 +55,7 @@ func TestAST(t *testing.T) {
 									// Not sure if this should be an anonymous ident with a name,
 									// without a name, or if ast.Type should just implement Expression
 									&ast.Ident{
-										Type: ast.NewFloatType(),
+										TypeOf: ast.NewFloatType(),
 									},
 								},
 							},
@@ -65,12 +65,12 @@ func TestAST(t *testing.T) {
 										Value: &ast.BinaryOperation{
 											Op: ast.AdditionBinaryOp,
 											LeftNode: &ast.Ident{
-												Name: "a",
-												Type: ast.NewIntType(),
+												Name:   "a",
+												TypeOf: ast.NewIntType(),
 											},
 											RightNode: &ast.Ident{
-												Name: "b",
-												Type: ast.NewFloatType(),
+												Name:   "b",
+												TypeOf: ast.NewFloatType(),
 											},
 										},
 									},

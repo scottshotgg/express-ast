@@ -5,13 +5,16 @@ import "github.com/scottshotgg/express-token"
 // IfElse represents the following form:
 // if [ condition ] [ block ] { [ else ] [ statement ] }
 type IfElse struct {
-	Token         token.Token
-	IfCondition   *Condition
-	If            *Block
-	ElseCondition *Condition
+	Token token.Token
+	// IfCondition   *Condition
+	Condition Expression
+	Body      *Block
+	// ElseCondition *Condition
+	// ElseCondition Expression
 	// TODO: Hmmm this is supposed to only be a block or another if statement
 	// but should we try to bound it?
-	Else *ElseStatement
+	// Else *ElseStatement
+	Else *IfElse
 }
 
 func (ie *IfElse) statementNode()     {}

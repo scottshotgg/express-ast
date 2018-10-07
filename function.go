@@ -8,10 +8,10 @@ type Function struct {
 	Lambda    bool
 	Async     bool
 	Token     token.Token
-	Name      string
+	Ident     *Ident
 	Arguments *Group
 	Returns   *Group
-	Body      Block
+	Body      *Block
 }
 
 // Implement statement
@@ -27,3 +27,17 @@ func (f *Function) TokenLiteral() token.Token { return f.Token }
 func (f *Function) Type() LiteralType { return FunctionType }
 
 func (f *Function) Kind() NodeType { return FunctionNode }
+
+func NewFunction(ft, it token.Token, args *Group, body *Block) (*Function, error) {
+	ident, err := NewIdent(it, "")
+	if err != nil {
+		return nil, err
+	}
+
+	return &Function{
+		Token:     ft,
+		Ident:     ident,
+		Arguments: args,
+		Body:      body,
+	}, nil
+}

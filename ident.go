@@ -9,9 +9,9 @@ import (
 // Ident represents the following form:
 // [ name ]
 type Ident struct {
-	Token token.Token
-	Type  Type
-	Name  string
+	Token  token.Token
+	TypeOf Type
+	Name   string
 }
 
 func (i *Ident) expressionNode() {}
@@ -25,130 +25,148 @@ func (i *Ident) Kind() NodeType { return IdentNode }
 // But I don't think identifiers here need to have a type, that's NOT what the AST is for; keep track of that in the parser, etc
 
 // NewIdent returns a new identifier
-// func NewIdent(t token.Token, it Type, n string) (*Ident, error) {
-func NewIdent(t token.Token, n string) (*Ident, error) {
-	if n == "" {
+// func NewIdent(t token.Token, it Type) (*Ident, error) {
+func NewIdent(t token.Token, it string) (*Ident, error) {
+	if t.Value.String == "" {
 		return nil, errors.New("Cannot use empty string as identifier name")
 	}
 
-	return &Ident{
-		Token: t,
-		// Type:  it,
-		Name: n,
-	}, nil
+	switch it {
+	case "int":
+		return NewIntIdent(t)
+
+	case "bool":
+		return NewBoolIdent(t)
+
+	case "float":
+		return NewFloatIdent(t)
+
+	case "char":
+		return NewCharIdent(t)
+
+	case "string":
+		return NewStringIdent(t)
+
+	default:
+		return &Ident{
+			Token: t,
+			// TypeOf:  it,
+			Name: t.Value.String,
+		}, nil
+	}
 }
 
 // NewIntIdent returns a new identifier for an int type
-func NewIntIdent(t token.Token, n string) (*Ident, error) {
-	if n == "" {
+func NewIntIdent(t token.Token) (*Ident, error) {
+	if t.Value.String == "" {
 		return nil, errors.New("Cannot use empty string as identifier name")
 	}
 
 	return &Ident{
-		Token: t,
-		Type:  NewIntType(),
-		Name:  n,
+		Token:  t,
+		TypeOf: NewIntType(),
+		Name:   t.Value.String,
 	}, nil
 }
 
 // NewBoolIdent returns a new identifier for an bool type
-func NewBoolIdent(t token.Token, n string) (*Ident, error) {
-	if n == "" {
+func NewBoolIdent(t token.Token) (*Ident, error) {
+	if t.Value.String == "" {
 		return nil, errors.New("Cannot use empty string as identifier name")
 	}
 
 	return &Ident{
-		Token: t,
-		Type:  NewBoolType(),
-		Name:  n,
+		Token:  t,
+		TypeOf: NewBoolType(),
+		Name:   t.Value.String,
 	}, nil
 }
 
 // NewFloatIdent returns a new identifier for an float type
-func NewFloatIdent(t token.Token, n string) (*Ident, error) {
-	if n == "" {
+func NewFloatIdent(t token.Token) (*Ident, error) {
+	if t.Value.String == "" {
 		return nil, errors.New("Cannot use empty string as identifier name")
 	}
 
 	return &Ident{
-		Token: t,
-		Type:  NewFloatType(),
-		Name:  n,
+		Token:  t,
+		TypeOf: NewFloatType(),
+		Name:   t.Value.String,
 	}, nil
 }
 
 // NewCharIdent returns a new identifier for an char type
-func NewCharIdent(t token.Token, n string) (*Ident, error) {
-	if n == "" {
+func NewCharIdent(t token.Token) (*Ident, error) {
+	if t.Value.String == "" {
 		return nil, errors.New("Cannot use empty string as identifier name")
 	}
 
 	return &Ident{
-		Token: t,
-		Type:  NewCharType(),
-		Name:  n,
+		Token:  t,
+		TypeOf: NewCharType(),
+		Name:   t.Value.String,
 	}, nil
 }
 
 // NewStringIdent returns a new identifier for an string type
-func NewStringIdent(t token.Token, n string) (*Ident, error) {
-	if n == "" {
+func NewStringIdent(t token.Token) (*Ident, error) {
+	if t.Value.String == "" {
 		return nil, errors.New("Cannot use empty string as identifier name")
 	}
 
 	return &Ident{
-		Token: t,
-		Type:  NewStringType(),
-		Name:  n,
+		Token:  t,
+		TypeOf: NewStringType(),
+		Name:   t.Value.String,
 	}, nil
 }
 
-// func NewStructIdent(t token.Token, n string) (*Ident, error) {
-// 	if n == "" {
+// func NewStructIdent(t token.Token) (*Ident, error) {
+// 	if t.Value.String == "" {
 // 		return nil, errors.New("Cannot use empty string as identifier name")
 // 	}
 
 // 	return &Ident{
 // 		Token: t,
-// 		Type:  NewStructType(),
+// 		TypeOf:  NewStructType(),
 // 		Name:  n,
 // 	}, nil
 // }
 
 // NewObjectIdent returns a new identifier for an object type
-func NewObjectIdent(t token.Token, n string) (*Ident, error) {
-	if n == "" {
+func NewObjectIdent(t token.Token) (*Ident, error) {
+	if t.Value.String == "" {
 		return nil, errors.New("Cannot use empty string as identifier name")
 	}
 
 	return &Ident{
-		Token: t,
-		Type:  NewObjectType(),
-		Name:  n,
+		Token:  t,
+		TypeOf: NewObjectType(),
+		Name:   t.Value.String,
 	}, nil
 }
 
 // NewFunctionIdent returns a new identifier for an function type
-func NewFunctionIdent(t token.Token, n string) (*Ident, error) {
-	if n == "" {
+func NewFunctionIdent(t token.Token) (*Ident, error) {
+	if t.Value.String == "" {
 		return nil, errors.New("Cannot use empty string as identifier name")
 	}
 
 	return &Ident{
-		Token: t,
-		Type:  NewFunctionType(),
-		Name:  n,
+		Token:  t,
+		TypeOf: NewFunctionType(),
+		Name:   t.Value.String,
 	}, nil
 }
 
-// func NewVarIdent(t token.Token, n string) (*Ident, error) {
-// 	if n == "" {
+// func NewVarIdent(t token.Token) (*Ident, error) {
+// 	if t.Value.String == "" {
 // 		return nil, errors.New("Cannot use empty string as identifier name")
 // 	}
 
 // 	return &Ident{
 // 		Token: t,
-// 		Type:  NewVarType(),
+// 		TypeOf:  NewVarType(),
 // 		Name:  n,
 // 	}, nil
 // }
