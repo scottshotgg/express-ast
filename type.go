@@ -8,8 +8,15 @@ import (
 type LiteralType int
 
 const (
+	_ LiteralType = iota
+
+	// DefaultType directs the parser to apply the default value
+	// for the declaration and is used in places where the value
+	// tokens for the declaration are not specified
+	DefaultType
+
 	// IntType denotes an integer literal type
-	IntType LiteralType = iota + 1
+	IntType
 
 	// BoolType denotes a bool literal type
 	BoolType

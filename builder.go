@@ -131,8 +131,8 @@ func (a *ASTBuilder) GetExpression() (Expression, error) {
 	// test and then do a NewConditional with the token
 	nextToken := a.Tokens[a.Index+1]
 	if nextToken.Type == token.LThan || nextToken.Type == token.GThan {
-		a.Index++
-		a.Index++
+		a.Index += 2
+
 		term2, err := a.GetExpression()
 		if err != nil {
 			return nil, err
@@ -388,9 +388,33 @@ func (a *ASTBuilder) GetStatement() (Statement, error) {
 				Ident:     ident,
 				Arguments: args,
 			}, nil
+
+		default:
+			// assignmentToken, ok := token.TokenMap["="]
+			// if !ok {
+			// 	return nil, errors.New("Could not find assignment token in tokenmap")
+			// }
+
+			// If the token that comes afterwards is none of these
+			// apply a default value for a declaration
+			as, err := NewAssignment(token.TokenMap["="], ident, NewDefault(token.Token{
+				Type: "DEFAULT",
+				Value: token.Value{
+					String: currentToken.Value.String,
+				},
+			}))
+			if err != nil {
+				return nil, err
+			}
+
+			as.SetDeclaration(true)
+
+			// TODO: add statement here later
+			return as, nil
 		}
 
-		return nil, errors.Errorf("Expected assignment token, got %+v", a.Tokens[a.Index])
+		// By default, if there is a `[ type ] [ ident]` combination, that is a default valued initialization
+		// return nil, errors.Errorf("Expected assignment token, got %+v", a.Tokens[a.Index])
 
 	case token.LBrace:
 		// Here we will want to recursively call GetStatement()
