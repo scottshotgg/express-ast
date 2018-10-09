@@ -1,6 +1,8 @@
 package ast
 
 import (
+	"fmt"
+
 	"github.com/pkg/errors"
 	"github.com/scottshotgg/express-token"
 )
@@ -52,6 +54,11 @@ func (b *BinaryOperation) expressionNode() {}
 func (b *BinaryOperation) TokenLiteral() token.Token { return b.Token }
 
 func (b *BinaryOperation) Kind() NodeType { return BinaryOperationNode }
+
+func (b *BinaryOperation) String() string {
+	// FIXME: just doing this to get it to compile
+	return fmt.Sprintf("%+v", *b)
+}
 
 // NewBinaryOperation returns a BinaryOperation with the evaluation value
 func NewBinaryOperation(t token.Token, binOpString string, l Expression, r Expression) (*BinaryOperation, error) {

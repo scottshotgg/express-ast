@@ -2,6 +2,7 @@ package ast
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/scottshotgg/express-token"
 )
@@ -45,6 +46,11 @@ func (i *Iterable) expressionNode() {}
 func (i *Iterable) TokenLiteral() token.Token { return i.Token }
 
 func (i *Iterable) Kind() NodeType { return IdentNode }
+
+func (i *Iterable) String() string {
+	// FIXME: just doing this to get it to compile
+	return fmt.Sprintf("%+v", *i)
+}
 
 func NewIterable(t, i token.Token, v *Ident, o Expression) (*Iterable, error) {
 	switch i.Value.String {

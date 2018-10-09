@@ -1,6 +1,10 @@
 package ast
 
-import "github.com/scottshotgg/express-token"
+import (
+	"fmt"
+
+	"github.com/scottshotgg/express-token"
+)
 
 // Access is the action ([ expression ] `.` [ expression ]) represented by the
 // dot operator that allows the internals of a struct to be utilized
@@ -16,3 +20,8 @@ func (a *Access) expressionNode() {}
 func (a *Access) TokenLiteral() token.Token { return a.Token }
 
 func (a *Access) Kind() NodeType { return AccessNode }
+
+func (a *Access) String() string {
+	// FIXME: just doing this to get it to compile
+	return fmt.Sprintf("%+v", *a)
+}

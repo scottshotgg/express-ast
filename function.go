@@ -1,6 +1,10 @@
 package ast
 
-import "github.com/scottshotgg/express-token"
+import (
+	"fmt"
+
+	"github.com/scottshotgg/express-token"
+)
 
 // Function represents the following form:
 // [ `func` | `fn` ] [ ident ] [ group ] { group } [ block ]
@@ -27,6 +31,11 @@ func (f *Function) TokenLiteral() token.Token { return f.Token }
 func (f *Function) Type() LiteralType { return FunctionType }
 
 func (f *Function) Kind() NodeType { return FunctionNode }
+
+func (f *Function) String() string {
+	// FIXME: just doing this to get it to compile
+	return fmt.Sprintf("%+v", *f)
+}
 
 func NewFunction(ft, it token.Token, args *Group, body *Block) (*Function, error) {
 	ident, err := NewIdent(it, "")

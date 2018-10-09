@@ -1,6 +1,10 @@
 package ast
 
-import "github.com/scottshotgg/express-token"
+import (
+	"fmt"
+
+	"github.com/scottshotgg/express-token"
+)
 
 // If we want to allow objects to contain statements in Express objects,
 // then we would need to implement Blocks as an ExpressionStatement
@@ -30,3 +34,8 @@ func (b *Block) TokenLiteral() token.Token { return b.Token }
 func (b *Block) Length() int { return len(b.Statements) }
 
 func (b *Block) Kind() NodeType { return BlockNode }
+
+func (b *Block) String() string {
+	// FIXME: just doing this to get it to compile
+	return fmt.Sprintf("%+v", *b)
+}

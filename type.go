@@ -60,6 +60,11 @@ type Type struct {
 
 func (t *Type) Kind() NodeType { return TypeNode }
 
+func (t *Type) String() string {
+	// FIXME: just doing this to get it to compile
+	return fmt.Sprintf("%+v", *t)
+}
+
 var (
 	nameToUserDefinedTypeMap = map[string]*Type{}
 	idToUserDefinedTypeMap   = map[LiteralType]*Type{}

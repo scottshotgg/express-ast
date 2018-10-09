@@ -1,5 +1,7 @@
 package ast
 
+import "fmt"
+
 // Program represents the following form:
 // [ statement ]*
 type Program struct {
@@ -25,3 +27,9 @@ func (p *Program) AddFile(f *File) {
 }
 
 func (p *Program) Kind() NodeType { return ProgramNode }
+
+func (p *Program) String() string {
+	// For now:
+	// - leave it like this and loop over the files
+	return fmt.Sprintf("%+v", *p)
+}

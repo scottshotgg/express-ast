@@ -1,6 +1,10 @@
 package ast
 
-import "github.com/scottshotgg/express-token"
+import (
+	"fmt"
+
+	"github.com/scottshotgg/express-token"
+)
 
 type UnaryType int
 
@@ -22,3 +26,8 @@ func (u *UnaryOp) expressionNode() {}
 func (u *UnaryOp) TokenLiteral() token.Token { return u.Token }
 
 func (u *UnaryOp) Kind() NodeType { return ConditionNode }
+
+func (u *UnaryOp) String() string {
+	// FIXME: just doing this to get it to compile
+	return fmt.Sprintf("%+v", *u)
+}

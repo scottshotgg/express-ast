@@ -2,6 +2,7 @@ package ast
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/scottshotgg/express-token"
 )
@@ -42,6 +43,27 @@ func (a *Assignment) statementNode() {}
 func (a *Assignment) TokenLiteral() token.Token { return a.Token }
 
 func (a *Assignment) Kind() NodeType { return AssignmentNode }
+
+// func (a *Assignment) ToString() (string, error) {
+// 	// This should attempt to return the string value of the node
+// 	// This should recurse down
+
+// 	return "", nil
+// }
+
+func (a Assignment) String() string {
+
+	// TODO: if we want to keep going with the stringer interface
+	// do a .ValueType for expressions
+	// ACTUALLY: we might not need this if we apply the `type-resolver`
+	// stage before hand
+
+	// if a.Inferred {
+	// 	return fmt.Sprintf("%s %s = %s", a.LHS a.RHS, a.LHS)
+	// }
+
+	return fmt.Sprintf("%s = %s;", a.LHS, a.RHS)
+}
 
 // TODO: dont think I wanna do this yet
 // func NewAssignmentStatement() Assignment {

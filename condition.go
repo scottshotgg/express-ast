@@ -1,6 +1,10 @@
 package ast
 
-import "github.com/scottshotgg/express-token"
+import (
+	"fmt"
+
+	"github.com/scottshotgg/express-token"
+)
 
 // ConditionType encompasses all types of conditions
 type ConditionType int
@@ -64,3 +68,8 @@ func (c *Condition) expressionNode() {}
 func (c *Condition) TokenLiteral() token.Token { return c.Token }
 
 func (c *Condition) Kind() NodeType { return ConditionNode }
+
+func (c *Condition) String() string {
+	// FIXME: just doing this to get it to compile
+	return fmt.Sprintf("%+v", *c)
+}

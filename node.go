@@ -50,5 +50,7 @@ type Node interface {
 
 	Kind() NodeType
 
+	String() string
+
 	// Location() map[string]*Location
 }

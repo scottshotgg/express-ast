@@ -1,6 +1,10 @@
 package ast
 
-import "github.com/scottshotgg/express-token"
+import (
+	"fmt"
+
+	"github.com/scottshotgg/express-token"
+)
 
 // Switch statements represents the following form:
 // `switch` { expression } [ case_block ]
@@ -33,3 +37,8 @@ func (s *Switch) statementNode() {}
 func (s *Switch) TokenLiteral() token.Token { return s.Token }
 
 func (s *Switch) Kind() NodeType { return SwitchNode }
+
+func (s *Switch) String() string {
+	// FIXME: just doing this to get it to compile
+	return fmt.Sprintf("%+v", *s)
+}

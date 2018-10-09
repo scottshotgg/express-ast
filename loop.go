@@ -1,6 +1,10 @@
 package ast
 
-import "github.com/scottshotgg/express-token"
+import (
+	"fmt"
+
+	"github.com/scottshotgg/express-token"
+)
 
 // LoopType encompasses all types of loops
 type LoopType int
@@ -59,3 +63,8 @@ func (l *Loop) statementNode() {}
 func (l *Loop) TokenLiteral() token.Token { return l.Token }
 
 func (l *Loop) Kind() NodeType { return LoopNode }
+
+func (l *Loop) String() string {
+	// FIXME: just doing this to get it to compile
+	return fmt.Sprintf("%+v", *l)
+}

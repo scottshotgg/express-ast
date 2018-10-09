@@ -1,6 +1,10 @@
 package ast
 
-import "github.com/scottshotgg/express-token"
+import (
+	"fmt"
+
+	"github.com/scottshotgg/express-token"
+)
 
 // IfElse represents the following form:
 // if [ condition ] [ block ] { [ else ] [ statement ] }
@@ -24,3 +28,8 @@ func (ie *IfElse) elseStatementNode() {}
 func (ie *IfElse) TokenLiteral() token.Token { return ie.Token }
 
 func (ie *IfElse) Kind() NodeType { return IfElseNode }
+
+func (ie *IfElse) String() string {
+	// FIXME: just doing this to get it to compile
+	return fmt.Sprintf("%+v", *ie)
+}

@@ -26,8 +26,11 @@ func (a *ASTBuilder) GetFactor() (Expression, error) {
 		case token.BoolType:
 			return NewBool(currentToken, currentToken.Value.True.(bool)), nil
 
+		case token.FloatType:
+			return NewFloat(currentToken, currentToken.Value.True.(float64)), nil
+
 		case token.CharType:
-			return NewChar(currentToken, currentToken.Value.True.(rune)), nil
+			return NewChar(currentToken, currentToken.Value.True.(string)), nil
 
 		case token.StringType:
 			return NewString(currentToken, currentToken.Value.True.(string)), nil
@@ -47,6 +50,10 @@ func (a *ASTBuilder) GetTerm() (Expression, error) {
 	}
 
 	fmt.Println("factor", factor)
+
+	if a.Index+1 > len(a.Tokens)-1 {
+		return factor, nil
+	}
 
 	// FIXME: ideally, we should check for a `UNARY` operator class
 	nextToken := a.Tokens[a.Index+1]
@@ -125,6 +132,10 @@ func (a *ASTBuilder) GetExpression() (Expression, error) {
 	term, err := a.GetTerm()
 	if err != nil {
 		return nil, err
+	}
+
+	if a.Index+1 > len(a.Tokens)-1 {
+		return term, nil
 	}
 
 	// FIXME: ideally, these should have a `CONDITIONAL` class that we can
@@ -634,7 +645,7 @@ func (a *ASTBuilder) BuildAST() (*Program, error) {
 func CompressTokens(lexTokens []token.Token) ([]token.Token, error) {
 	compressedTokens := []token.Token{}
 
-	alreadyChecked := false
+	// alreadyChecked := false
 
 	// Combine operators
 	for i := 0; i < len(lexTokens); i++ {
@@ -655,7 +666,7 @@ func CompressTokens(lexTokens []token.Token) ([]token.Token, error) {
 
 					// If we were able to combine the last two tokens and make a new one, mark it
 					if i == len(lexTokens)-1 {
-						alreadyChecked = true
+						// alreadyChecked = true
 					}
 
 					continue
@@ -666,10 +677,10 @@ func CompressTokens(lexTokens []token.Token) ([]token.Token, error) {
 		compressedTokens = append(compressedTokens, lexTokens[i])
 	}
 
-	// If it hasn't been already checked and the last token is not a white space, then append it
-	if !alreadyChecked && lexTokens[len(lexTokens)-1].Type != token.Whitespace {
-		compressedTokens = append(compressedTokens, lexTokens[len(lexTokens)-1])
-	}
+	// // If it hasn't been already checked and the last token is not a white space, then append it
+	// if !alreadyChecked && lexTokens[len(lexTokens)-1].Type != token.Whitespace {
+	// 	compressedTokens = append(compressedTokens, lexTokens[len(lexTokens)-1])
+	// }
 
 	compressedTokens2 := []token.Token{}
 	// Combine array type tokens

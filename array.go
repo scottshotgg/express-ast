@@ -1,6 +1,10 @@
 package ast
 
-import "github.com/scottshotgg/express-token"
+import (
+	"fmt"
+
+	"github.com/scottshotgg/express-token"
+)
 
 // Array represents array type data structures
 type Array struct {
@@ -19,3 +23,8 @@ func (a *Array) TokenLiteral() token.Token { return a.Token }
 func (a *Array) Type() LiteralType { return a.TypeOf }
 
 func (a *Array) Kind() NodeType { return ArrayNode }
+
+func (a *Array) String() string {
+	// FIXME: just doing this to get it to compile
+	return fmt.Sprintf("%+v", *a)
+}

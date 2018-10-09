@@ -1,6 +1,11 @@
 package ast
 
-import "github.com/scottshotgg/express-token"
+import (
+	"fmt"
+	"strconv"
+
+	"github.com/scottshotgg/express-token"
+)
 
 // Literal is an abstract type that represents a literal value, in constrast with a value-producer, such as an expression
 type Literal interface {
@@ -27,6 +32,10 @@ func (il *IntLiteral) Type() Type { return il.TypeOf }
 
 func (il *IntLiteral) Kind() NodeType { return LiteralNode }
 
+func (il *IntLiteral) String() string {
+	return strconv.Itoa(il.Value)
+}
+
 // BoolLiteral represents a variable that is restricted to either a true or false value
 type BoolLiteral struct {
 	Token  token.Token
@@ -43,6 +52,10 @@ func (bl *BoolLiteral) TokenLiteral() token.Token { return bl.Token }
 func (bl *BoolLiteral) Type() Type { return bl.TypeOf }
 
 func (bl *BoolLiteral) Kind() NodeType { return LiteralNode }
+
+func (bl *BoolLiteral) String() string {
+	return strconv.FormatBool(bl.Value)
+}
 
 // FloatLiteral represents any floating point number
 type FloatLiteral struct {
@@ -61,12 +74,17 @@ func (fl *FloatLiteral) Type() Type { return fl.TypeOf }
 
 func (fl *FloatLiteral) Kind() NodeType { return LiteralNode }
 
+func (fl *FloatLiteral) String() string {
+	// FIXME: %+v has a default precision of 5 or 6 - we need to fix this
+	return strconv.FormatFloat(fl.Value, 'f', -1, 64)
+}
+
 // CharLiteral represents a single-character capped string:
 // `'` [ _single_character_ ] `'`
 type CharLiteral struct {
 	Token  token.Token
 	TypeOf Type
-	Value  rune
+	Value  string
 }
 
 func (cl *CharLiteral) expressionNode() {}
@@ -78,6 +96,10 @@ func (cl *CharLiteral) TokenLiteral() token.Token { return cl.Token }
 func (cl *CharLiteral) Type() Type { return cl.TypeOf }
 
 func (cl *CharLiteral) Kind() NodeType { return LiteralNode }
+
+func (cl *CharLiteral) String() string {
+	return fmt.Sprintf("'%s'", cl.Value)
+}
 
 // StringLiteral represents a double quoted body of text:
 // TODO: how to do a backtick quoted body of text
@@ -98,6 +120,10 @@ func (sl *StringLiteral) Type() Type { return sl.TypeOf }
 
 func (sl *StringLiteral) Kind() NodeType { return LiteralNode }
 
+func (sl *StringLiteral) String() string {
+	return fmt.Sprintf("\"%s\"", sl.Value)
+}
+
 // VarLiteral represents a dynamically typed variable; it can hold anything
 type VarLiteral struct {
 	Token  token.Token
@@ -115,6 +141,12 @@ func (vl *VarLiteral) TokenLiteral() token.Token { return vl.Token }
 func (vl *VarLiteral) Type() Type { return vl.TypeOf }
 
 func (vl *VarLiteral) Kind() NodeType { return LiteralNode }
+
+func (vl *VarLiteral) String() string {
+	// This should actually call the stringer for the right type
+	// do a switch? ORRRR make it's type hold another Literal node
+	return fmt.Sprintf("%+v", vl.Value)
+}
 
 // ObjectLiteral represents a named block : this produces a variable
 type ObjectLiteral struct {
@@ -137,6 +169,11 @@ func (ol *ObjectLiteral) Type() Type { return ol.TypeOf }
 
 func (ol *ObjectLiteral) Kind() NodeType { return LiteralNode }
 
+func (ol *ObjectLiteral) String() string {
+	// Might want to use JSON for this
+	return fmt.Sprintf("%+v", ol.Value)
+}
+
 // StructLiteral represents a named object : this produces a type
 // TODO: this might need to be moved to the type.go file
 // FIXME: this might need to be fixed or something
@@ -155,6 +192,11 @@ func (sl *StructLiteral) TokenLiteral() token.Token { return sl.Token }
 func (sl *StructLiteral) Type() Type { return sl.TypeOf }
 
 func (sl *StructLiteral) Kind() NodeType { return LiteralNode }
+
+func (sl *StructLiteral) String() string {
+	// Might want to use JSON for this
+	return fmt.Sprintf("%+v", sl.Value)
+}
 
 // FunctionLiteral represents a named object : this produces a type
 type FunctionLiteral struct {
@@ -175,6 +217,11 @@ func (fl *FunctionLiteral) TokenLiteral() token.Token { return fl.Token }
 func (fl *FunctionLiteral) Type() Type { return fl.TypeOf }
 
 func (fl *FunctionLiteral) Kind() NodeType { return LiteralNode }
+
+func (fl *FunctionLiteral) String() string {
+	// This should probably have some specific string representation
+	return fmt.Sprintf("%+v", fl.Value)
+}
 
 // func NewLiteral(t Token, v interface{}) *Literal {
 
@@ -213,7 +260,7 @@ func NewFloat(t token.Token, value float64) *FloatLiteral {
 }
 
 // NewChar returns a new char literal
-func NewChar(t token.Token, value rune) *CharLiteral {
+func NewChar(t token.Token, value string) *CharLiteral {
 	return &CharLiteral{
 		Token:  t,
 		TypeOf: NewCharType(),

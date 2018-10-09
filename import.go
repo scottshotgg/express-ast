@@ -1,6 +1,10 @@
 package ast
 
-import "github.com/scottshotgg/express-token"
+import (
+	"fmt"
+
+	"github.com/scottshotgg/express-token"
+)
 
 // Import is an import statement in the form of:
 // `import` [ string_lit ]
@@ -17,3 +21,8 @@ func (i *Import) statementNode() {}
 func (i *Import) TokenLiteral() token.Token { return i.Token }
 
 func (i *Import) Kind() NodeType { return ImportNode }
+
+func (i *Import) String() string {
+	// FIXME: just doing this to get it to compile
+	return fmt.Sprintf("%+v", *i)
+}

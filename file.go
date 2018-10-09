@@ -1,5 +1,10 @@
 package ast
 
+import (
+	"strings"
+	"sync"
+)
+
 // File represents a file that is being compiled
 type File struct {
 	Name       string
@@ -31,3 +36,26 @@ func (f *File) AddStatement(stmt Statement) {
 }
 
 func (f *File) Kind() NodeType { return FileNode }
+
+func (f *File) String() string {
+	stmts := make([]string, len(f.Statements))
+
+	wg := sync.WaitGroup{}
+	for i, stmt := range f.Statements {
+		wg.Add(1)
+
+		go func(i int, stmt Statement, wg *sync.WaitGroup) {
+			stmts[i] = stmt.String()
+
+			wg.Done()
+		}(i, stmt, &wg)
+	}
+
+	wg.Wait()
+
+	if f.Name == "main.expr" {
+		return "int main() {" + strings.Join(stmts, "") + "}"
+	}
+
+	return strings.Join(stmts, "\n")
+}
