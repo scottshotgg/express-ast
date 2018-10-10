@@ -1,7 +1,8 @@
 package ast
 
 import (
-	"fmt"
+	"strings"
+	"sync"
 
 	"github.com/scottshotgg/express-token"
 )
@@ -36,6 +37,20 @@ func (b *Block) Length() int { return len(b.Statements) }
 func (b *Block) Kind() NodeType { return BlockNode }
 
 func (b *Block) String() string {
-	// FIXME: just doing this to get it to compile
-	return fmt.Sprintf("%+v", *b)
+	stmts := make([]string, len(b.Statements))
+
+	wg := sync.WaitGroup{}
+	for i, stmt := range b.Statements {
+		wg.Add(1)
+
+		go func(i int, stmt Statement, wg *sync.WaitGroup) {
+			stmts[i] = stmt.String()
+
+			wg.Done()
+		}(i, stmt, &wg)
+	}
+
+	wg.Wait()
+
+	return "{" + strings.Join(stmts, "\n") + "};"
 }

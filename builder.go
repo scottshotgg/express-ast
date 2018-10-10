@@ -420,6 +420,8 @@ func (a *ASTBuilder) GetStatement() (Statement, error) {
 
 			as.SetDeclaration(true)
 
+			a.Index--
+
 			// TODO: add statement here later
 			return as, nil
 		}

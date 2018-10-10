@@ -1,8 +1,6 @@
 package ast
 
 import (
-	"fmt"
-
 	"github.com/scottshotgg/express-token"
 )
 
@@ -11,7 +9,7 @@ import (
 // DefaultLiteral is a type of Literal token
 type DefaultLiteral struct {
 	Token  token.Token
-	TypeOf Type
+	TypeOf *Type
 	Value  string
 }
 
@@ -21,19 +19,23 @@ func (d *DefaultLiteral) expressionNode() {}
 func (d *DefaultLiteral) TokenLiteral() token.Token { return d.Token }
 
 // Type implements literal
-func (d *DefaultLiteral) Type() Type { return d.TypeOf }
+func (d *DefaultLiteral) Type() *Type { return d.TypeOf }
 
 func (d *DefaultLiteral) Kind() NodeType { return LiteralNode }
 
 func (d *DefaultLiteral) String() string {
 	// FIXME: just doing this to get it to compile
-	return fmt.Sprintf("%+v", *d)
+	return NewLiteral(d.Token, d.Type()).String()
 }
 
 // NewDefault returns a new int literal
 func NewDefault(t token.Token) *DefaultLiteral {
 	return &DefaultLiteral{
 		Token: t,
+		TypeOf: &Type{
+			Type:       DefaultType,
+			UpgradesTo: DefaultType,
+		},
 		Value: t.Value.String,
 	}
 }

@@ -1,8 +1,6 @@
 package ast
 
 import (
-	"fmt"
-
 	"github.com/scottshotgg/express-token"
 )
 
@@ -25,6 +23,10 @@ func (g *Group) Type() Type { return g.TypeOf }
 func (g *Group) Kind() NodeType { return GroupNode }
 
 func (g *Group) String() string {
-	// FIXME: just doing this to get it to compile
-	return fmt.Sprintf("%+v", *g)
+	groupString := "("
+	for _, elem := range g.Elements {
+		groupString += elem.String()
+	}
+
+	return groupString + ")"
 }

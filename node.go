@@ -5,7 +5,8 @@ import "github.com/scottshotgg/express-token"
 type NodeType int
 
 const (
-	AccessNode NodeType = iota + 1
+	_ NodeType = iota
+	AccessNode
 	ArrayNode
 	AssignmentNode
 	BinaryOperationNode
@@ -17,6 +18,7 @@ const (
 	FunctionNode
 	GroupNode
 	IdentNode
+	IncludeNode
 	IfElseNode
 	ImportNode
 	IndexNode

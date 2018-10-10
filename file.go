@@ -7,7 +7,9 @@ import (
 
 // File represents a file that is being compiled
 type File struct {
-	Name       string
+	// TODO: think about how file and block can abstractly be the same thing
+	Name string
+	// This might need to include an array for functions; do this for blocks too
 	Statements []Statement
 }
 
@@ -54,7 +56,8 @@ func (f *File) String() string {
 	wg.Wait()
 
 	if f.Name == "main.expr" {
-		return "int main() {" + strings.Join(stmts, "") + "}"
+		// TODO: need to do something else with the imports
+		return "#include <string>\n int main() {" + strings.Join(stmts, "") + "}"
 	}
 
 	return strings.Join(stmts, "\n")

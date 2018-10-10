@@ -1,8 +1,6 @@
 package ast
 
 import (
-	"fmt"
-
 	"github.com/scottshotgg/express-token"
 )
 
@@ -32,9 +30,28 @@ func (f *Function) Type() LiteralType { return FunctionType }
 
 func (f *Function) Kind() NodeType { return FunctionNode }
 
-func (f *Function) String() string {
-	// FIXME: just doing this to get it to compile
-	return fmt.Sprintf("%+v", *f)
+// // TODO: we are only supporting on return for now
+// func (f Function) String() string {
+// 	return1 := "void"
+// 	// Don't know if we need this, just being cautious rn
+// 	if f.Returns != nil && f.Returns.Elements[0] != nil {
+// 		return1 = f.Returns.Elements[0].(*Ident).Name
+// 	}
+
+// 	// FIXME: put all the functions at the top of the C++ file
+// 	return return1 + " " + f.Ident.Name + f.Arguments.String() + f.Body.String()
+// }
+
+// TODO: we are only supporting on return for now
+func (f Function) String() string {
+	return1 := "void"
+	// Don't know if we need this, just being cautious rn
+	if f.Returns != nil && f.Returns.Elements[0] != nil {
+		return1 = f.Returns.Elements[0].(*Ident).Name
+	}
+
+	// FIXME: put all the functions at the top of the C++ file
+	return "std::function<" + return1 + f.Arguments.String() + ">" + f.Ident.Name + "= []" + f.Arguments.String() + f.Body.String()
 }
 
 func NewFunction(ft, it token.Token, args *Group, body *Block) (*Function, error) {

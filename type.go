@@ -8,7 +8,7 @@ import (
 type LiteralType int
 
 const (
-	_ LiteralType = iota
+	NoneType LiteralType = iota + 1
 
 	// DefaultType directs the parser to apply the default value
 	// for the declaration and is used in places where the value
@@ -94,8 +94,8 @@ func DeclareUserDefinedType(udt *Type) LiteralType {
 }
 
 // NewIntType is used to take some of the boilerplate code out of defining an int Type
-func NewIntType() Type {
-	return Type{
+func NewIntType() *Type {
+	return &Type{
 		Name:       "int",
 		Type:       IntType,
 		UpgradesTo: FloatType,
@@ -103,24 +103,26 @@ func NewIntType() Type {
 }
 
 // NewBoolType is used to take some of the boilerplate code out of defining a bool Type
-func NewBoolType() Type {
-	return Type{
-		Name: "bool",
-		Type: BoolType,
+func NewBoolType() *Type {
+	return &Type{
+		Name:       "bool",
+		Type:       BoolType,
+		UpgradesTo: NoneType,
 	}
 }
 
 // NewFloatType is used to take some of the boilerplate code out of defining a float Type
-func NewFloatType() Type {
-	return Type{
-		Name: "float",
-		Type: FloatType,
+func NewFloatType() *Type {
+	return &Type{
+		Name:       "float",
+		Type:       FloatType,
+		UpgradesTo: NoneType,
 	}
 }
 
 // NewCharType is used to take some of the boilerplate code out of defining a char Type
-func NewCharType() Type {
-	return Type{
+func NewCharType() *Type {
+	return &Type{
 		Name:       "char",
 		Type:       CharType,
 		UpgradesTo: StringType,
@@ -128,17 +130,18 @@ func NewCharType() Type {
 }
 
 // NewStringType is used to take some of the boilerplate code out of defining a string Type
-func NewStringType() Type {
-	return Type{
-		Name: "string",
-		Type: StringType,
+func NewStringType() *Type {
+	return &Type{
+		Name:       "string",
+		Type:       StringType,
+		UpgradesTo: NoneType,
 	}
 }
 
 // NewVarType is used to take some of the boilerplate code out of defining an var Type
-func NewVarType(lt LiteralType) Type {
+func NewVarType(lt LiteralType) *Type {
 	// somehow need to gaurantee that the shadow type is not `var`
-	return Type{
+	return &Type{
 		Name:       "var",
 		Type:       VarType,
 		ShadowType: &lt,
@@ -147,15 +150,15 @@ func NewVarType(lt LiteralType) Type {
 }
 
 // NewObjectType is used to take some of the boilerplate code out of defining an object Type
-func NewObjectType() Type {
-	return Type{
+func NewObjectType() *Type {
+	return &Type{
 		Name: "object",
 		Type: ObjectType,
 	}
 }
 
 // NewStructType is used to take some of the boilerplate code out of defining a struct Type
-func NewStructType(lt LiteralType) Type {
+func NewStructType(lt LiteralType) *Type {
 	if _, ok := idToUserDefinedTypeMap[lt]; !ok {
 		// FIXME: fix this later or something
 		fmt.Printf("Not able to find %d in map during struct inititializer\n", lt)
@@ -163,7 +166,7 @@ func NewStructType(lt LiteralType) Type {
 	}
 
 	thing := StructType
-	return Type{
+	return &Type{
 		Name:       "struct",
 		Type:       lt,
 		ShadowType: &thing,
@@ -172,8 +175,8 @@ func NewStructType(lt LiteralType) Type {
 }
 
 // NewFunctionType is used to take some of the boilerplate code out of defining a function Type
-func NewFunctionType() Type {
-	return Type{
+func NewFunctionType() *Type {
+	return &Type{
 		Name: "function",
 		Type: FunctionType,
 	}

@@ -10,7 +10,7 @@ import (
 // Literal is an abstract type that represents a literal value, in constrast with a value-producer, such as an expression
 type Literal interface {
 	Expression
-	Type() Type
+	Type() *Type
 }
 
 // Literals should have acting types and acting values that get set when the value is set
@@ -18,7 +18,7 @@ type Literal interface {
 // IntLiteral represents any non floating-point number
 type IntLiteral struct {
 	Token  token.Token
-	TypeOf Type
+	TypeOf *Type
 	Value  int
 }
 
@@ -28,7 +28,7 @@ func (il *IntLiteral) expressionNode() {}
 func (il *IntLiteral) TokenLiteral() token.Token { return il.Token }
 
 // Type implements literal
-func (il *IntLiteral) Type() Type { return il.TypeOf }
+func (il *IntLiteral) Type() *Type { return il.TypeOf }
 
 func (il *IntLiteral) Kind() NodeType { return LiteralNode }
 
@@ -39,7 +39,7 @@ func (il *IntLiteral) String() string {
 // BoolLiteral represents a variable that is restricted to either a true or false value
 type BoolLiteral struct {
 	Token  token.Token
-	TypeOf Type
+	TypeOf *Type
 	Value  bool
 }
 
@@ -49,7 +49,7 @@ func (bl *BoolLiteral) expressionNode() {}
 func (bl *BoolLiteral) TokenLiteral() token.Token { return bl.Token }
 
 // Type implements literal
-func (bl *BoolLiteral) Type() Type { return bl.TypeOf }
+func (bl *BoolLiteral) Type() *Type { return bl.TypeOf }
 
 func (bl *BoolLiteral) Kind() NodeType { return LiteralNode }
 
@@ -60,7 +60,7 @@ func (bl *BoolLiteral) String() string {
 // FloatLiteral represents any floating point number
 type FloatLiteral struct {
 	Token  token.Token
-	TypeOf Type
+	TypeOf *Type
 	Value  float64
 }
 
@@ -70,7 +70,7 @@ func (fl *FloatLiteral) expressionNode() {}
 func (fl *FloatLiteral) TokenLiteral() token.Token { return fl.Token }
 
 // Type implements literal
-func (fl *FloatLiteral) Type() Type { return fl.TypeOf }
+func (fl *FloatLiteral) Type() *Type { return fl.TypeOf }
 
 func (fl *FloatLiteral) Kind() NodeType { return LiteralNode }
 
@@ -83,7 +83,7 @@ func (fl *FloatLiteral) String() string {
 // `'` [ _single_character_ ] `'`
 type CharLiteral struct {
 	Token  token.Token
-	TypeOf Type
+	TypeOf *Type
 	Value  string
 }
 
@@ -93,7 +93,7 @@ func (cl *CharLiteral) expressionNode() {}
 func (cl *CharLiteral) TokenLiteral() token.Token { return cl.Token }
 
 // Type implements literal
-func (cl *CharLiteral) Type() Type { return cl.TypeOf }
+func (cl *CharLiteral) Type() *Type { return cl.TypeOf }
 
 func (cl *CharLiteral) Kind() NodeType { return LiteralNode }
 
@@ -106,7 +106,7 @@ func (cl *CharLiteral) String() string {
 // `"` [ _text_ ] `"`
 type StringLiteral struct {
 	Token  token.Token
-	TypeOf Type
+	TypeOf *Type
 	Value  string
 }
 
@@ -116,7 +116,7 @@ func (sl *StringLiteral) expressionNode() {}
 func (sl *StringLiteral) TokenLiteral() token.Token { return sl.Token }
 
 // Type implements literal
-func (sl *StringLiteral) Type() Type { return sl.TypeOf }
+func (sl *StringLiteral) Type() *Type { return sl.TypeOf }
 
 func (sl *StringLiteral) Kind() NodeType { return LiteralNode }
 
@@ -127,7 +127,7 @@ func (sl *StringLiteral) String() string {
 // VarLiteral represents a dynamically typed variable; it can hold anything
 type VarLiteral struct {
 	Token  token.Token
-	TypeOf Type
+	TypeOf *Type
 	// TODO: could either do it this way or this can reference another literal type
 	Value interface{}
 }
@@ -138,7 +138,7 @@ func (vl *VarLiteral) expressionNode() {}
 func (vl *VarLiteral) TokenLiteral() token.Token { return vl.Token }
 
 // Type implements literal
-func (vl *VarLiteral) Type() Type { return vl.TypeOf }
+func (vl *VarLiteral) Type() *Type { return vl.TypeOf }
 
 func (vl *VarLiteral) Kind() NodeType { return LiteralNode }
 
@@ -151,7 +151,7 @@ func (vl *VarLiteral) String() string {
 // ObjectLiteral represents a named block : this produces a variable
 type ObjectLiteral struct {
 	Token  token.Token
-	TypeOf Type
+	TypeOf *Type
 	// TODO: could either do it this way or make block implement literal and then it can be directly used as a literal
 	Value Block
 
@@ -165,7 +165,7 @@ func (ol *ObjectLiteral) expressionNode() {}
 func (ol *ObjectLiteral) TokenLiteral() token.Token { return ol.Token }
 
 // Type implements literal
-func (ol *ObjectLiteral) Type() Type { return ol.TypeOf }
+func (ol *ObjectLiteral) Type() *Type { return ol.TypeOf }
 
 func (ol *ObjectLiteral) Kind() NodeType { return LiteralNode }
 
@@ -179,7 +179,7 @@ func (ol *ObjectLiteral) String() string {
 // FIXME: this might need to be fixed or something
 type StructLiteral struct {
 	Token  token.Token
-	TypeOf Type
+	TypeOf *Type
 	Value  map[string]Expression
 }
 
@@ -189,7 +189,7 @@ func (sl *StructLiteral) expressionNode() {}
 func (sl *StructLiteral) TokenLiteral() token.Token { return sl.Token }
 
 // Type implements literal
-func (sl *StructLiteral) Type() Type { return sl.TypeOf }
+func (sl *StructLiteral) Type() *Type { return sl.TypeOf }
 
 func (sl *StructLiteral) Kind() NodeType { return LiteralNode }
 
@@ -201,7 +201,7 @@ func (sl *StructLiteral) String() string {
 // FunctionLiteral represents a named object : this produces a type
 type FunctionLiteral struct {
 	Token  token.Token
-	TypeOf Type
+	TypeOf *Type
 	// TODO: could either do it this way or make block implement literal and then it can be directly used as a literal
 
 	// On the backend, a function would essentially just be a block (i.e, object) that is able to be called
@@ -214,7 +214,7 @@ func (fl *FunctionLiteral) expressionNode() {}
 func (fl *FunctionLiteral) TokenLiteral() token.Token { return fl.Token }
 
 // Type implements literal
-func (fl *FunctionLiteral) Type() Type { return fl.TypeOf }
+func (fl *FunctionLiteral) Type() *Type { return fl.TypeOf }
 
 func (fl *FunctionLiteral) Kind() NodeType { return LiteralNode }
 
@@ -223,9 +223,12 @@ func (fl *FunctionLiteral) String() string {
 	return fmt.Sprintf("%+v", fl.Value)
 }
 
-// func NewLiteral(t Token, v interface{}) *Literal {
-
-// }
+func NewLiteral(t token.Token, ty *Type) Literal {
+	// switch ty.Type {
+	// case IntType:
+	return NewInt(t, 0)
+	// }
+}
 
 // NewInt returns a new int literal
 func NewInt(t token.Token, value int) *IntLiteral {

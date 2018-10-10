@@ -1,8 +1,6 @@
 package ast
 
 import (
-	"fmt"
-
 	"github.com/scottshotgg/express-token"
 )
 
@@ -26,6 +24,5 @@ func (c *Call) TokenLiteral() token.Token { return c.Token }
 func (c *Call) Kind() NodeType { return CallNode }
 
 func (c *Call) String() string {
-	// FIXME: just doing this to get it to compile
-	return fmt.Sprintf("%+v", *c)
+	return c.Ident.Name + c.Arguments.String() + ";"
 }

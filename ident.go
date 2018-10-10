@@ -10,7 +10,7 @@ import (
 // [ name ]
 type Ident struct {
 	Token  token.Token
-	TypeOf Type
+	TypeOf *Type
 	Name   string
 }
 
@@ -22,6 +22,10 @@ func (i *Ident) TokenLiteral() token.Token { return i.Token }
 func (i *Ident) Kind() NodeType { return IdentNode }
 
 func (i Ident) String() string {
+	if i.TypeOf.Name == token.StringType {
+		return "std::" + i.TypeOf.Name + " " + i.Name
+	}
+
 	return i.TypeOf.Name + " " + i.Name
 }
 
@@ -56,9 +60,9 @@ func NewIdent(t token.Token, it string) (*Ident, error) {
 
 	default:
 		return &Ident{
-			Token: t,
-			// TypeOf:  it,
-			Name: t.Value.String,
+			Token:  t,
+			TypeOf: &Type{},
+			Name:   t.Value.String,
 		}, nil
 	}
 }
