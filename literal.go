@@ -2,6 +2,7 @@ package ast
 
 import (
 	"fmt"
+	"os"
 	"strconv"
 
 	"github.com/scottshotgg/express-token"
@@ -223,11 +224,42 @@ func (fl *FunctionLiteral) String() string {
 	return fmt.Sprintf("%+v", fl.Value)
 }
 
+func TypeFromString(t string) *Type {
+	switch t {
+	case "int":
+		return NewIntType()
+	case "bool":
+		return NewBoolType()
+	case "float":
+		return NewFloatType()
+	case "char":
+		return NewCharType()
+	case "string":
+		return NewStringType()
+	}
+
+	fmt.Println("TYPE WAS NOT DEFINED IN TypeFromString()")
+	os.Exit(9)
+	return nil
+}
+
 func NewLiteral(t token.Token, ty *Type) Literal {
-	// switch ty.Type {
-	// case IntType:
-	return NewInt(t, 0)
-	// }
+	switch ty.Type {
+	case IntType:
+		return NewInt(t, 0)
+	case BoolType:
+		return NewBool(t, false)
+	case FloatType:
+		return NewFloat(t, 0.0)
+	case CharType:
+		return NewChar(t, "''")
+	case StringType:
+		return NewString(t, "")
+	}
+
+	fmt.Println("TYPE WAS NOT DEFINED IN NewLiteral()")
+	os.Exit(9)
+	return nil
 }
 
 // NewInt returns a new int literal

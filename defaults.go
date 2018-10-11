@@ -31,11 +31,8 @@ func (d *DefaultLiteral) String() string {
 // NewDefault returns a new int literal
 func NewDefault(t token.Token) *DefaultLiteral {
 	return &DefaultLiteral{
-		Token: t,
-		TypeOf: &Type{
-			Type:       DefaultType,
-			UpgradesTo: DefaultType,
-		},
-		Value: t.Value.String,
+		Token:  t,
+		TypeOf: TypeFromString(t.Value.String),
+		Value:  t.Value.String,
 	}
 }
