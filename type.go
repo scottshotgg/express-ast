@@ -152,8 +152,9 @@ func NewVarType(lt LiteralType) *Type {
 // NewObjectType is used to take some of the boilerplate code out of defining an object Type
 func NewObjectType() *Type {
 	return &Type{
-		Name: "object",
-		Type: ObjectType,
+		Name:       "object",
+		Type:       ObjectType,
+		UpgradesTo: NoneType,
 	}
 }
 

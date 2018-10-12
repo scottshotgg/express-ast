@@ -36,6 +36,9 @@ func (b *Block) Length() int { return len(b.Statements) }
 
 func (b *Block) Kind() NodeType { return BlockNode }
 
+// Type implements literal
+func (b *Block) Type() *Type { return NewObjectType() }
+
 func (b *Block) String() string {
 	stmts := make([]string, len(b.Statements))
 
@@ -52,5 +55,5 @@ func (b *Block) String() string {
 
 	wg.Wait()
 
-	return "{" + strings.Join(stmts, "\n") + "};"
+	return "{" + strings.Join(stmts, "\n") + "}"
 }

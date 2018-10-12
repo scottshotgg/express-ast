@@ -172,7 +172,7 @@ func (ol *ObjectLiteral) Kind() NodeType { return LiteralNode }
 
 func (ol *ObjectLiteral) String() string {
 	// Might want to use JSON for this
-	return fmt.Sprintf("%+v", ol.Value)
+	return ol.Value.String()
 }
 
 // StructLiteral represents a named object : this produces a type
@@ -243,6 +243,9 @@ func TypeFromString(t string) *Type {
 
 	case "var":
 		return NewVarType(VarType)
+
+	case "object":
+		return NewObjectType()
 	}
 
 	fmt.Println("TYPE WAS NOT DEFINED IN TypeFromString()")
@@ -268,7 +271,12 @@ func NewLiteral(t token.Token, ty *Type) Literal {
 		return NewString(t, "")
 
 	case VarType:
+		// The default value for a var is the integer 0 because it reduces memory
+		// footprint and is the least complicated value to containerize
 		return NewVarFromInt(t, 0)
+
+	case ObjectType:
+		return NewObject(t, Block{})
 	}
 
 	fmt.Println("TYPE WAS NOT DEFINED IN NewLiteral()")

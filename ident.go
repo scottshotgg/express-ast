@@ -24,6 +24,9 @@ func (i *Ident) Kind() NodeType { return IdentNode }
 func (i Ident) String() string {
 	if i.TypeOf.Name == token.StringType {
 		return "std::" + i.TypeOf.Name + " " + i.Name
+	} else if i.TypeOf.Name == token.ObjectType {
+		// Object is just a var on the backend
+		return "var " + i.Name
 	}
 
 	return i.TypeOf.Name + " " + i.Name
@@ -57,6 +60,9 @@ func NewIdent(t token.Token, it string) (*Ident, error) {
 
 	case "var":
 		return NewVarIdent(t)
+
+	case "object":
+		return NewObjectIdent(t)
 
 	default:
 		return &Ident{

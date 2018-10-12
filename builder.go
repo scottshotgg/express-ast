@@ -38,6 +38,9 @@ func (a *ASTBuilder) GetFactor() (Expression, error) {
 
 	case token.Ident:
 		return NewIdent(currentToken, "")
+
+	case token.LBrace:
+		return a.GetBlock()
 	}
 
 	return nil, errors.Errorf("Could not parse factor from token: %+v", currentToken)
