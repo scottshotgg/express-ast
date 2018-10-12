@@ -43,6 +43,18 @@ func (f *Function) Kind() NodeType { return FunctionNode }
 // }
 
 // TODO: we are only supporting on return for now
+// std::function
+// func (f Function) String() string {
+// 	return1 := "void"
+// 	// Don't know if we need this, just being cautious rn
+// 	if f.Returns != nil && f.Returns.Elements[0] != nil {
+// 		return1 = f.Returns.Elements[0].(*Ident).Name
+// 	}
+
+// 	// FIXME: put all the functions at the top of the C++ file
+// 	return "std::function<" + return1 + f.Arguments.String() + ">" + f.Ident.Name + "= []" + f.Arguments.String() + f.Body.String()
+// }
+
 func (f Function) String() string {
 	return1 := "void"
 	// Don't know if we need this, just being cautious rn
@@ -50,8 +62,13 @@ func (f Function) String() string {
 		return1 = f.Returns.Elements[0].(*Ident).Name
 	}
 
+	// TODO: should probably check the returns and arguments in here
+	if f.Ident.Name == "main" {
+		return "int main()" + f.Body.String()
+	}
+
 	// FIXME: put all the functions at the top of the C++ file
-	return "std::function<" + return1 + f.Arguments.String() + ">" + f.Ident.Name + "= []" + f.Arguments.String() + f.Body.String()
+	return return1 + " " + f.Ident.Name + f.Arguments.String() + f.Body.String()
 }
 
 func NewFunction(ft, it token.Token, args *Group, body *Block) (*Function, error) {
