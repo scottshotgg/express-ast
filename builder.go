@@ -30,7 +30,7 @@ func (a *ASTBuilder) GetFactor() (Expression, error) {
 			return NewFloat(currentToken, currentToken.Value.True.(float64)), nil
 
 		case token.CharType:
-			return NewChar(currentToken, currentToken.Value.True.(string)), nil
+			return NewChar(currentToken, currentToken.Value.True.(int)), nil
 
 		case token.StringType:
 			return NewString(currentToken, currentToken.Value.True.(string)), nil

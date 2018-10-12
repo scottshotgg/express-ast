@@ -85,7 +85,7 @@ func (fl *FloatLiteral) String() string {
 type CharLiteral struct {
 	Token  token.Token
 	TypeOf *Type
-	Value  string
+	Value  int
 }
 
 func (cl *CharLiteral) expressionNode() {}
@@ -99,7 +99,7 @@ func (cl *CharLiteral) Type() *Type { return cl.TypeOf }
 func (cl *CharLiteral) Kind() NodeType { return LiteralNode }
 
 func (cl *CharLiteral) String() string {
-	return fmt.Sprintf("'%s'", cl.Value)
+	return fmt.Sprintf("%d", cl.Value)
 }
 
 // StringLiteral represents a double quoted body of text:
@@ -228,14 +228,21 @@ func TypeFromString(t string) *Type {
 	switch t {
 	case "int":
 		return NewIntType()
+
 	case "bool":
 		return NewBoolType()
+
 	case "float":
 		return NewFloatType()
+
 	case "char":
 		return NewCharType()
+
 	case "string":
 		return NewStringType()
+
+	case "var":
+		return NewVarType(VarType)
 	}
 
 	fmt.Println("TYPE WAS NOT DEFINED IN TypeFromString()")
@@ -247,14 +254,21 @@ func NewLiteral(t token.Token, ty *Type) Literal {
 	switch ty.Type {
 	case IntType:
 		return NewInt(t, 0)
+
 	case BoolType:
 		return NewBool(t, false)
+
 	case FloatType:
 		return NewFloat(t, 0.0)
+
 	case CharType:
-		return NewChar(t, "''")
+		return NewChar(t, 0)
+
 	case StringType:
 		return NewString(t, "")
+
+	case VarType:
+		return NewVarFromInt(t, 0)
 	}
 
 	fmt.Println("TYPE WAS NOT DEFINED IN NewLiteral()")
@@ -295,7 +309,7 @@ func NewFloat(t token.Token, value float64) *FloatLiteral {
 }
 
 // NewChar returns a new char literal
-func NewChar(t token.Token, value string) *CharLiteral {
+func NewChar(t token.Token, value int) *CharLiteral {
 	return &CharLiteral{
 		Token:  t,
 		TypeOf: NewCharType(),
