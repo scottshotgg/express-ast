@@ -55,11 +55,11 @@ const (
 // Condition represents an expression that always evaluates to a boolean value:
 // [ expression ] [ condition_op ] [ expression ]
 type Condition struct {
-	Token token.Token
-	Type  ConditionType
-	Left  Expression
-	Right Expression
-	Value bool
+	Token  token.Token
+	TypeOf ConditionType
+	Left   Expression
+	Right  Expression
+	Value  bool
 }
 
 func (c *Condition) expressionNode() {}
@@ -72,4 +72,8 @@ func (c *Condition) Kind() NodeType { return ConditionNode }
 func (c *Condition) String() string {
 	// FIXME: just doing this to get it to compile
 	return fmt.Sprintf("%+v", *c)
+}
+
+func (c *Condition) Type() *Type {
+	return NewBoolType()
 }

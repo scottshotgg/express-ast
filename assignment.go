@@ -93,6 +93,7 @@ func NewAssignment(t token.Token, i *Ident, e Expression) (*Assignment, error) {
 	case ":":
 		as.Type = Set
 		as.Declaration = true
+		i.TypeOf = NewVarType(e.Type().Type)
 
 	case "=":
 		as.Type = Equals

@@ -31,3 +31,7 @@ func (u *UnaryOp) String() string {
 	// FIXME: just doing this to get it to compile
 	return fmt.Sprintf("%+v", *u)
 }
+
+func (u *UnaryOp) Type() *Type {
+	return u.Value.Type()
+}

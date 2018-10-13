@@ -2,6 +2,7 @@ package ast
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/pkg/errors"
 	"github.com/scottshotgg/express-token"
@@ -58,6 +59,14 @@ func (b *BinaryOperation) Kind() NodeType { return BinaryOperationNode }
 func (b *BinaryOperation) String() string {
 	// FIXME: just doing this to get it to compile
 	return fmt.Sprintf("%+v", *b)
+}
+
+func (b *BinaryOperation) Type() *Type {
+	// FIXME: this needs some thought
+	fmt.Println("Type() for binary operations is not implemented yet")
+	os.Exit(9)
+
+	return nil
 }
 
 // NewBinaryOperation returns a BinaryOperation with the evaluation value

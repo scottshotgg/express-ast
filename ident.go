@@ -32,6 +32,12 @@ func (i Ident) String() string {
 	return i.TypeOf.Name + " " + i.Name
 }
 
+func (i *Ident) Type() *Type {
+	// TODO: this might be kind of weird to use since idents
+	//  don't always have a type on the first pass
+	return i.TypeOf
+}
+
 // Might need to make specific type-functions
 // But I don't think identifiers here need to have a type, that's NOT what the AST is for; keep track of that in the parser, etc
 

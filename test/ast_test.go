@@ -38,12 +38,14 @@ func TestAST(t *testing.T) {
 					&ast.Assignment{
 						Declaration: true,
 						Inferred:    true,
-						Lhs: &ast.Ident{
+						LHS: &ast.Ident{
 							TypeOf: ast.NewFloatType(),
 							Name:   "myAdder",
 						},
-						Rhs: &ast.Function{
-							Name: "myFunction",
+						RHS: &ast.Function{
+							Ident: &ast.Ident{
+								Name: "myFunction",
+							},
 							Arguments: &ast.Group{
 								Elements: []ast.Expression{
 									ast.NewInt(token.Token{}, 0),
@@ -59,7 +61,7 @@ func TestAST(t *testing.T) {
 									},
 								},
 							},
-							Body: ast.Block{
+							Body: &ast.Block{
 								Statements: []ast.Statement{
 									&ast.Return{
 										Value: &ast.BinaryOperation{

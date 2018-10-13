@@ -11,7 +11,6 @@ import (
 // Literal is an abstract type that represents a literal value, in constrast with a value-producer, such as an expression
 type Literal interface {
 	Expression
-	Type() *Type
 }
 
 // Literals should have acting types and acting values that get set when the value is set

@@ -8,6 +8,5 @@ type Expression interface {
 	// This is just something to force the interface
 	expressionNode()
 
-	// I think we need this on the expression
-	//Type() *Type
+	Type() *Type
 }

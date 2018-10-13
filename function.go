@@ -25,8 +25,8 @@ func (f *Function) expressionNode() {}
 // TokenLiteral returns the literal value of the token
 func (f *Function) TokenLiteral() token.Token { return f.Token }
 
-// Type implements literal so that functions can be assigned to idents
-func (f *Function) Type() LiteralType { return FunctionType }
+// Type implements expression so that functions can be assigned to idents
+func (f *Function) Type() *Type { return NewFunctionType() }
 
 func (f *Function) Kind() NodeType { return FunctionNode }
 

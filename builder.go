@@ -39,6 +39,7 @@ func (a *ASTBuilder) GetFactor() (Expression, error) {
 	case token.Ident:
 		return NewIdent(currentToken, "")
 
+		// TODO: consider changing this if we want to allow for a different syntax inside of objects
 	case token.LBrace:
 		return a.GetBlock()
 	}
@@ -95,9 +96,9 @@ func (a *ASTBuilder) GetTerm() (Expression, error) {
 
 		fmt.Println("therese a conditional")
 		return &Condition{
-			Type:  ct,
-			Left:  factor,
-			Right: factor2,
+			TypeOf: ct,
+			Left:   factor,
+			Right:  factor2,
 		}, nil
 	}
 
@@ -166,9 +167,9 @@ func (a *ASTBuilder) GetExpression() (Expression, error) {
 
 		fmt.Println("therese a conditional")
 		return &Condition{
-			Type:  ct,
-			Left:  term,
-			Right: term2,
+			TypeOf: ct,
+			Left:   term,
+			Right:  term2,
 		}, nil
 	}
 
