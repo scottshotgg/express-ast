@@ -48,7 +48,7 @@ const (
 type Loop struct {
 	Token token.Token
 	Type  LoopType
-	Init  Statement
+	Init  *Assignment
 	Cond  Expression
 	Post  Expression
 	Body  *Block

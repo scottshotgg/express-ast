@@ -29,6 +29,7 @@ const (
 	ReturnNode
 	SwitchNode
 	TypeNode
+	UnaryNode
 )
 
 // Position is used to specify where in the code the token for the node was found

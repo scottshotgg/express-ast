@@ -527,6 +527,10 @@ func (a *ASTBuilder) GetStatement() (Statement, error) {
 					return nil, err
 				}
 
+				// if stmt.Kind() != ast.AssignmentNode{
+				// 	return nil, errors.New("Loops must ")
+				// }
+
 				a.Index++
 
 				// For now just check for the separator here
@@ -560,7 +564,7 @@ func (a *ASTBuilder) GetStatement() (Statement, error) {
 				return &Loop{
 					Token: forToken,
 					Type:  StdFor,
-					Init:  stmt,
+					Init:  stmt.(*Assignment),
 					Cond:  expr,
 					Post:  expr2,
 					Body:  body,

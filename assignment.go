@@ -1,8 +1,9 @@
 package ast
 
 import (
-	"errors"
 	"fmt"
+
+	"github.com/pkg/errors"
 
 	"github.com/scottshotgg/express-token"
 )
@@ -93,6 +94,11 @@ func NewAssignment(t token.Token, i *Ident, e Expression) (*Assignment, error) {
 	case ":":
 		as.Type = Set
 		as.Declaration = true
+
+		fmt.Println(i.TypeOf)
+		if i.TypeOf != nil && *i.TypeOf != (Type{}) {
+			return nil, errors.Errorf("Cannot use var declaration with type: %s", i.Name)
+		}
 		i.TypeOf = NewVarType(e.Type().Type)
 
 	case "=":
