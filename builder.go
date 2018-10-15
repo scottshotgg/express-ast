@@ -42,6 +42,30 @@ func (a *ASTBuilder) GetFactor() (Expression, error) {
 		// TODO: consider changing this if we want to allow for a different syntax inside of objects
 	case token.LBrace:
 		return a.GetBlock()
+
+	case token.LBracket:
+		aToken := a.Tokens[a.Index]
+
+		// Increment over the array opening
+		a.Index++
+
+		// The array should only contain expressions
+		elements := []Expression{}
+		for a.Tokens[a.Index].Type != token.RBracket {
+			fmt.Println("expression")
+			expr, err := a.GetExpression()
+			if err != nil {
+				return nil, err
+			}
+
+			elements = append(elements, expr)
+			a.Index++
+		}
+
+		// Step over the RBracket
+		// a.Index++
+
+		return NewArray(aToken, elements), nil
 	}
 
 	return nil, errors.Errorf("Could not parse factor from token: %+v", currentToken)
@@ -133,6 +157,12 @@ func (a *ASTBuilder) GetTerm() (Expression, error) {
 }
 
 func (a *ASTBuilder) GetExpression() (Expression, error) {
+	if a.Tokens[a.Index].Type == token.Separator {
+		// TODO: just skip the separator for now
+		a.Index++
+		return a.GetExpression()
+	}
+
 	term, err := a.GetTerm()
 	if err != nil {
 		return nil, err
@@ -593,10 +623,17 @@ func (a *ASTBuilder) GetStatement() (Statement, error) {
 					return nil, err
 				}
 
+				prepType := ForIn
+				if preposition.Value.String == "of" {
+					prepType = ForOf
+				} else if preposition.Value.String == "over" {
+					prepType = ForOver
+				}
+
 				// FIXME: should make a new function for this
 				return &Loop{
 					Token: forToken,
-					Type:  StdFor,
+					Type:  prepType,
 					Iter:  iter,
 					Body:  body,
 				}, nil

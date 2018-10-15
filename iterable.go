@@ -45,7 +45,7 @@ func (i *Iterable) expressionNode() {}
 // TokenLiteral returns the literal value of the token
 func (i *Iterable) TokenLiteral() token.Token { return i.Token }
 
-func (i *Iterable) Kind() NodeType { return IdentNode }
+func (i *Iterable) Kind() NodeType { return IterableNode }
 
 func (i *Iterable) String() string {
 	// FIXME: just doing this to get it to compile
