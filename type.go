@@ -42,14 +42,17 @@ const (
 	// VarType denotes a var literal type
 	VarType
 
+	ArrayType
+
 	// UserDefinedType denotes a type user defined type
 	UserDefinedType
 )
 
 // Type is used to specify a variable type
 type Type struct {
-	Name string
-	Type LiteralType
+	Name  string
+	Type  LiteralType
+	Array bool
 
 	// UpgradesTo is used to specify how/what a variable can upgrade to
 	UpgradesTo LiteralType
@@ -181,4 +184,30 @@ func NewFunctionType() *Type {
 		Name: "function",
 		Type: FunctionType,
 	}
+}
+
+func NewArrayType(t *Type, homogenous bool) *Type {
+	var ty *Type
+
+	if homogenous {
+		switch t.Type {
+		case IntType:
+			ty = NewIntType()
+
+		case FloatType:
+			ty = NewFloatType()
+
+		}
+	} else {
+		// TODO: just make it a var for now
+		// FIXME: we will need to change the runtime to accept this
+		// FIXME: this probably needs to be fixed ...
+		ty = &Type{
+			Name: "var",
+			Type: VarType,
+		}
+	}
+
+	ty.Array = true
+	return ty
 }
