@@ -57,6 +57,7 @@ func (a *ASTBuilder) GetFactor() (Expression, error) {
 			if err != nil {
 				return nil, err
 			}
+			// hey
 
 			elements = append(elements, expr)
 			a.Index++
