@@ -51,6 +51,11 @@ func NewArray(t token.Token, elements []Expression) *Array {
 	if len(elements) > 0 {
 		typeOf = elements[0].Type()
 		for _, e := range elements[1:] {
+			if e.Type().Array != typeOf.Array {
+				typeOf = NewVarType(NoneType)
+				break
+			}
+
 			// Compare to figure out if we need to upgrade the array type or not
 			if e.Type().Type != typeOf.Type && e.Type().UpgradesTo != typeOf.Type {
 				// if the collected types can upgrade to the expression type

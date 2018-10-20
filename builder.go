@@ -634,6 +634,9 @@ func (a *ASTBuilder) GetStatement() (Statement, error) {
 					Iter:  iter,
 					Body:  body,
 				}, nil
+
+			default:
+				fmt.Println("preposition", a.Tokens[a.Index+1])
 			}
 		}
 

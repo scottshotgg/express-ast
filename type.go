@@ -2,6 +2,7 @@ package ast
 
 import (
 	"fmt"
+	"os"
 )
 
 // LiteralType encompasses all types of literals
@@ -189,6 +190,7 @@ func NewFunctionType() *Type {
 func NewArrayType(t *Type, homogenous bool) *Type {
 	var ty *Type
 
+	// FIXME: is it even needed to return the type
 	if homogenous {
 		switch t.Type {
 		case IntType:
@@ -196,6 +198,13 @@ func NewArrayType(t *Type, homogenous bool) *Type {
 
 		case FloatType:
 			ty = NewFloatType()
+
+		case StringType:
+			ty = NewStringType()
+
+		// This is here for a "list" type array essentially
+		case VarType:
+			ty = t
 
 		}
 	} else {
@@ -206,6 +215,11 @@ func NewArrayType(t *Type, homogenous bool) *Type {
 			Name: "var",
 			Type: VarType,
 		}
+	}
+
+	if ty == nil {
+		fmt.Printf("something happened %+v %+v", t, homogenous)
+		os.Exit(9)
 	}
 
 	ty.Array = true
