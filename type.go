@@ -2,6 +2,7 @@ package ast
 
 import (
 	"fmt"
+	"os"
 )
 
 // LiteralType encompasses all types of literals
@@ -196,6 +197,13 @@ func NewArrayType(t *Type, homogenous bool) *Type {
 
 		case FloatType:
 			ty = NewFloatType()
+
+		case ObjectType:
+			ty = NewObjectType()
+
+		default:
+			fmt.Printf("This type was not implemented in NewArrayType: %+v", t)
+			os.Exit(9)
 
 		}
 	} else {

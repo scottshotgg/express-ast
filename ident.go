@@ -26,7 +26,7 @@ func (i Ident) String() string {
 		return "std::" + i.TypeOf.Name + " " + i.Name
 	} else if i.TypeOf.Name == token.ObjectType {
 		// Object is just a var on the backend
-		return "var " + i.Name
+		return "object " + i.Name
 	}
 
 	return i.TypeOf.Name + " " + i.Name
