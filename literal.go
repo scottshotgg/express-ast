@@ -247,7 +247,7 @@ func TypeFromString(t string) *Type {
 		return NewObjectType()
 	}
 
-	fmt.Println("TYPE WAS NOT DEFINED IN TypeFromString()")
+	fmt.Printf("TYPE WAS NOT DEFINED IN TypeFromString() %+v\n", t)
 	os.Exit(9)
 	return nil
 }
