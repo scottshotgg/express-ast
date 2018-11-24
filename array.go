@@ -1,8 +1,6 @@
 package ast
 
 import (
-	"fmt"
-
 	"github.com/scottshotgg/express-token"
 )
 
@@ -41,7 +39,15 @@ func (a *Array) Kind() NodeType { return ArrayNode }
 
 func (a *Array) String() string {
 	// FIXME: just doing this to get it to compile
-	return fmt.Sprintf("%+v", *a)
+	// return fmt.Sprintf("%+v", *a)
+	// FIXME: this space is a hack kinda
+	arrayString := "{ "
+
+	for _, elem := range a.Elements {
+		arrayString += elem.String() + ","
+	}
+
+	return arrayString[:len(arrayString)-1] + "}"
 }
 
 func NewArray(t token.Token, elements []Expression) *Array {

@@ -2,6 +2,7 @@ package ast
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/scottshotgg/express-token"
 )
@@ -48,6 +49,8 @@ func NewIdent(t token.Token, it string) (*Ident, error) {
 		return nil, errors.New("Cannot use empty string as identifier name")
 	}
 
+	fmt.Println("SHIT", t.Value.String)
+
 	switch it {
 	case "int":
 		return NewIntIdent(t)
@@ -70,12 +73,42 @@ func NewIdent(t token.Token, it string) (*Ident, error) {
 	case "object":
 		return NewObjectIdent(t)
 
+	case "int[]":
+		id, err := NewIntIdent(t)
+		if err != nil {
+			return nil, err
+		}
+		id.TypeOf.Array = true
+
+		return id, nil
+
+	case "string[]":
+		id, err := NewStringIdent(t)
+		if err != nil {
+			return nil, err
+		}
+		id.TypeOf.Array = true
+
+		return id, nil
+
 	default:
+		// if strings.Contains(it, "[]") {
+		// 	fmt.Println("i am here")
+		// 	return &Ident{
+		// 		Token:  t,
+		// 		TypeOf: NewArrayType(TypeFromString(strings.Replace(it, "[]", "", 1)), true),
+		// 		Name:   t.Value.String,
+		// 	}, nil
+		// } else {
+
 		return &Ident{
 			Token:  t,
 			TypeOf: &Type{},
 			Name:   t.Value.String,
 		}, nil
+		// }
+
+		return nil, errors.New("NewIdent did not have this type: " + it)
 	}
 }
 

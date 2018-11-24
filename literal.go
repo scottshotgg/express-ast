@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/scottshotgg/express-token"
 )
@@ -224,6 +225,10 @@ func (fl *FunctionLiteral) String() string {
 }
 
 func TypeFromString(t string) *Type {
+	if strings.Contains(t, "[]") {
+		return NewArrayType(TypeFromString(strings.Replace(t, "[]", "", 1)), true)
+	}
+
 	switch t {
 	case "int":
 		return NewIntType()
@@ -253,6 +258,18 @@ func TypeFromString(t string) *Type {
 }
 
 func NewLiteral(t token.Token, ty *Type) Literal {
+	if ty.Array {
+		fmt.Println("fucking array", ty.Name)
+		return &Array{
+			Token:       t,
+			TypeOf:      NewArrayType(ty, true),
+			ElementType: TypeFromString(ty.Name),
+			Length:      0,
+			Elements:    []Expression{},
+			Homogenous:  true,
+		}
+	}
+
 	switch ty.Type {
 	case IntType:
 		return NewInt(t, 0)

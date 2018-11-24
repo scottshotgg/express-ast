@@ -1,6 +1,8 @@
 package ast
 
 import (
+	"fmt"
+
 	"github.com/scottshotgg/express-token"
 )
 
@@ -30,6 +32,8 @@ func (d *DefaultLiteral) String() string {
 
 // NewDefault returns a new int literal
 func NewDefault(t token.Token) *DefaultLiteral {
+	fmt.Println("type and stuff", TypeFromString(t.Value.String))
+
 	return &DefaultLiteral{
 		Token:  t,
 		TypeOf: TypeFromString(t.Value.String),

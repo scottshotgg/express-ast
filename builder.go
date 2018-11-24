@@ -2,6 +2,7 @@ package ast
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/pkg/errors"
 	"github.com/scottshotgg/express-token"
@@ -400,6 +401,7 @@ func (a *ASTBuilder) GetStatement() (Statement, error) {
 				return nil, err
 			}
 			fmt.Println("expr", expr)
+			// os.Exit(9)
 
 			// TODO: figure out why i put this here
 			if expr == nil {
@@ -440,6 +442,8 @@ func (a *ASTBuilder) GetStatement() (Statement, error) {
 			// 	return nil, errors.New("Could not find assignment token in tokenmap")
 			// }
 
+			fmt.Println("shit", currentToken.Value.String)
+			// os.Exit(9)
 			// If the token that comes afterwards is none of these
 			// apply a default value for a declaration
 			as, err := NewAssignment(token.TokenMap["="], ident, NewDefault(token.Token{
@@ -695,7 +699,7 @@ func CompressTokens(lexTokens []token.Token) ([]token.Token, error) {
 
 	// Combine operators
 	for i := 0; i < len(lexTokens); i++ {
-		fmt.Printf("%+v\n", lexTokens[i])
+		// fmt.Printf("%+v\n", lexTokens[i])
 
 		currentToken := lexTokens[i]
 
@@ -733,15 +737,46 @@ func CompressTokens(lexTokens []token.Token) ([]token.Token, error) {
 	for i := 0; i < len(compressedTokens); i++ {
 		currentToken := compressedTokens[i]
 
-		if i < len(compressedTokens)-2 {
-			nextToken := compressedTokens[i+1]
-			nextNextToken := compressedTokens[i+2]
+		if currentToken.Type == token.Ident {
+			if strings.Contains(currentToken.Value.String, ".") {
+				identSplit := strings.Split(currentToken.Value.String, ".")
 
-			if currentToken.Type == token.Type && nextToken.Type == token.LBracket && nextNextToken.Type == token.RBracket {
-				currentToken.Value.String += "[]"
-				currentToken.Value.Type += "[]"
+				for i, is := range identSplit {
+					if is == "" {
+						// add an accessor
+						compressedTokens2 = append(compressedTokens2,
+							token.Token{
+								Type: token.Accessor,
+								Value: token.Value{
+									Type:   "period",
+									String: ".",
+								},
+							})
+					} else {
+						// add the ident
+						compressedTokens2 = append(compressedTokens2,
+							token.Token{
+								Type: token.Ident,
+								Value: token.Value{
+									String: is,
+								},
+							})
 
-				i += 2
+						if i < len(identSplit)-1 {
+							// add an accessor
+							compressedTokens2 = append(compressedTokens2,
+								token.Token{
+									Type: token.Accessor,
+									Value: token.Value{
+										Type:   "period",
+										String: ".",
+									},
+								})
+						}
+					}
+				}
+
+				continue
 			}
 		}
 
@@ -749,11 +784,22 @@ func CompressTokens(lexTokens []token.Token) ([]token.Token, error) {
 	}
 
 	compressedTokens3 := []token.Token{}
-	// Filter out the white space
+	// Filter out the _un-needed_ white space
 	for i := 0; i < len(compressedTokens2); i++ {
-		if compressedTokens2[i].Type != token.Whitespace {
-			compressedTokens3 = append(compressedTokens3, compressedTokens2[i])
+		if compressedTokens2[i].Type == token.Whitespace {
+			continue
 		}
+
+		if compressedTokens2[i].Type == token.Return &&
+			compressedTokens2[i+1].Value.String == "\n" {
+			compressedTokens3 = append(compressedTokens3, compressedTokens2[i])
+			compressedTokens3 = append(compressedTokens3, compressedTokens2[i+1])
+			i++
+
+			continue
+		}
+
+		compressedTokens3 = append(compressedTokens3, compressedTokens2[i])
 	}
 
 	return compressedTokens3, nil
