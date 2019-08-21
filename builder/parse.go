@@ -12,6 +12,8 @@ var (
 	ErrNoEqualsFoundAfterIdent = errors.New("No equals found after ident in assignment")
 )
 
+// TODO: types are expressions, keep it that way
+
 func (b *Builder) ParseAssignmentStatement() (*types.Assignment, error) {
 	// into: [expr] = [expr]
 	// Check that the next token is an ident
@@ -49,7 +51,7 @@ func (b *Builder) ParseAssignmentStatement() (*types.Assignment, error) {
 
 		// TODO: this is where we need to check for `:`
 
-		// return b.AppendTokenToError(fmt.Sprintf("No equals found after ident in assignment: %+v", b.tokens[b.index]))
+		// return nil, b.AppendTokenToError(fmt.Sprintf("No equals found after ident in assignment: %+v", b.tokens[b.index]))
 		// This need to return the token in case the parse needs to be recovered! Look at ParseEnumBlock for an example of parse recovery
 		return ident, ErrNoEqualsFoundAfterIdent
 	}
@@ -85,123 +87,92 @@ func (b *Builder) ParseAssignmentStatement() (*types.Assignment, error) {
 func (b *Builder) ParseStatement() (types.Statement, error) {
 	switch b.tokens[b.index].Type {
 
-	case token.Launch:
-		return b.ParseLaunchStatement()
+	// case token.Launch:
+	// 	return b.ParseLaunchStatement()
 
-	case token.Defer:
-		return b.ParseDeferStatement()
+	// case token.Defer:
+	// 	return b.ParseDeferStatement()
 
-	case token.Enum:
-		return b.ParseEnumBlockStatement()
+	// case token.Enum:
+	// 	return b.ParseEnumBlockStatement()
 
-	case token.Map:
-		return b.ParseMapStatement()
+	// case token.Map:
+	// 	return b.ParseMapStatement()
 
-	case token.PriOp:
-		return b.ParseDerefStatement()
+	// case token.PriOp:
+	// 	return b.ParseDerefStatement()
 
-	case token.Package:
-		return b.ParsePackageStatement()
+	// case token.Package:
+	// 	return b.ParsePackageStatement()
 
-	case token.Import:
-		return b.ParseImportStatement()
+	// case token.Import:
+	// 	return b.ParseImportStatement()
 
-	// case token.Use:
-	// 	return b.ParseUseStatement()
+	// // case token.Use:
+	// // 	return b.ParseUseStatement()
 
-	case token.Include:
-		return b.ParseIncludeStatement()
+	// case token.Include:
+	// 	return b.ParseIncludeStatement()
 
-	case token.TypeDef:
-		return b.ParseTypeDeclarationStatement()
+	// case token.TypeDef:
+	// 	return b.ParseTypeDeclarationStatement()
 
-	case token.Struct:
-		return b.ParseStructStatement()
+	// case token.Struct:
+	// 	return b.ParseStructStatement()
 
-	case token.Object:
-		return b.ParseObjectStatement()
+	// case token.Object:
+	// 	return b.ParseObjectStatement()
 
-	// case token.C:
-	// 	return b.ParseCBlock()
+	// // case token.C:
+	// // 	return b.ParseCBlock()
 
-	case token.Type:
-		// // Struct is a keyword and a type so if we get it as a type statment
-		// // then we need to divert the parsing
-		// if b.tokens[b.index].Value.String == token.StructType {
-		// 	return b.ParseStructStatement()
-		// }
+	// case token.Type:
+	// 	// // Struct is a keyword and a type so if we get it as a type statment
+	// 	// // then we need to divert the parsing
+	// 	// if b.tokens[b.index].Value.String == token.StructType {
+	// 	// 	return b.ParseStructStatement()
+	// 	// }
 
-		return b.ParseDeclarationStatement(nil)
+	// 	return b.ParseDeclarationStatement(nil)
 
-	// For literal and idents, we will need to figure out what
-	// kind of statement it is
-	case token.Literal:
-		return b.ParseLiteralStatement()
+	// // For literal and idents, we will need to figure out what
+	// // kind of statement it is
+	// case token.Literal:
+	// 	return b.ParseLiteralStatement()
 
 	case token.Ident:
-		var t *TypeValue
-		// TODO: I can see this logic failing later, need to make an actual `imports` category
-		if b.tokens[b.index+1].Value.String == "." && b.ScopeTree.Global.Children[b.tokens[b.index].Value.String] != nil {
-			t = &TypeValue{
-				Type: ImportedValue,
-				Kind: b.tokens[b.index].Value.String,
-			}
-
-			// Step over the package name
-			b.index++
-			// If the package is C, it is a CTypeValue
-		} else if b.tokens[b.index].Value.String == "c" {
-			t = &TypeValue{
-				Type: CTypeValue,
-				Kind: b.tokens[b.index].Value.String,
-			}
-			// Step over the package name
-			b.index++
-		} else {
-			// Check the type before deciding whether it is an ident or a type
-			// TODO: this might need some more work
-			t = b.ScopeTree.GetType(b.tokens[b.index].Value.String)
-			if t != nil {
-				t.Type = PrimitiveValue
-			}
-		}
-
-		fmt.Println("FUCKING TYPE", t)
-		if t != nil {
-			// Set the token value to `type` instead of `ident` if we know it is a type
-			b.tokens[b.index].Type = "TYPE"
-			return b.ParseDeclarationStatement(t)
-		}
+		var expr, err = b.ParseExpression()
+		fmt.Println("expr, err", expr, err)
 
 		return b.ParseAssignmentStatement()
 
-	case token.Function:
-		return b.ParseFunctionStatement()
+	// case token.Function:
+	// 	return b.ParseFunctionStatement()
 
-	case token.LBrace:
-		return b.ParseBlockStatement()
+	// case token.LBrace:
+	// 	return b.ParseBlockStatement()
 
-	case token.Let:
-		return b.ParseLetStatement()
+	// case token.Let:
+	// 	return b.ParseLetStatement()
 
-	case token.If:
-		return b.ParseIfStatement()
+	// case token.If:
+	// 	return b.ParseIfStatement()
 
-	case token.For:
-		return b.ParseForStatement()
+	// case token.For:
+	// 	return b.ParseForStatement()
 
-	case token.Return:
-		return b.ParseReturnStatement()
+	// case token.Return:
+	// 	return b.ParseReturnStatement()
 
 	default:
-		return b.AppendTokenToError(fmt.Sprintf("Could not create statement from: %+v", b.tokens[b.index].Type))
+		return nil, b.AppendTokenToError(fmt.Sprintf("Could not create statement from: %+v", b.tokens[b.index].Type))
 	}
 }
 
 // func (b *Builder) ParseLaunchStatement() (*types.Launch, error) {
 // 	// Check ourselves ...
 // 	if b.tokens[b.index].Type != token.Launch {
-// 		return b.AppendTokenToError("Could not get launch statement")
+// 		return nil, b.AppendTokenToError("Could not get launch statement")
 // 	}
 
 // 	// Step over the import token
@@ -291,7 +262,7 @@ func (b *Builder) ParseStatement() (types.Statement, error) {
 // func (b *Builder) ParseObjectStatement() (*types.Object, error) {
 // 	// Check ourselves ...
 // 	if b.tokens[b.index].Type != token.Object {
-// 		return b.AppendTokenToError("Could not get object declaration statement")
+// 		return nil, b.AppendTokenToError("Could not get object declaration statement")
 // 	}
 
 // 	// Skip over the `struct` token
@@ -314,7 +285,7 @@ func (b *Builder) ParseStatement() (types.Statement, error) {
 
 // 	// Check for the equals token
 // 	if b.tokens[b.index].Type != token.Assign {
-// 		return b.AppendTokenToError("No equals found after ident in object def")
+// 		return nil, b.AppendTokenToError("No equals found after ident in object def")
 // 	}
 
 // 	// Increment over the equals
@@ -376,7 +347,7 @@ func (b *Builder) ParseStatement() (types.Statement, error) {
 
 // 	// Check that the next token is an ident
 // 	if b.tokens[b.index].Type != token.Ident {
-// 		return b.AppendTokenToError("Could not get ident in declaration statement")
+// 		return nil, b.AppendTokenToError("Could not get ident in declaration statement")
 // 	}
 
 // 	// Create the ident

@@ -141,7 +141,7 @@ func (b *Builder) ParseIncrement(n *types.Node) (*types.Node, error) {
 func (b *Builder) ParseCall(n *types.Node) (*types.Node, error) {
 	// Check ourselves ...
 	if b.tokens[b.index].Type != token.LParen {
-		return b.AppendTokenToError("Could not get left paren")
+		return nil, b.AppendTokenToError("Could not get left paren")
 	}
 
 	// We are not allowing for named arguments right now
@@ -165,7 +165,7 @@ func (b *Builder) ParseIndexExpression(n *types.Node) (*types.Node, error) {
 	}
 
 	if b.tokens[b.index].Type != token.LBracket {
-		return b.AppendTokenToError("Could not get left bracket")
+		return nil, b.AppendTokenToError("Could not get left bracket")
 	}
 
 	b.index++
@@ -192,7 +192,7 @@ func (b *Builder) ParseSelection(n *types.Node) (*types.Node, error) {
 	}
 
 	if b.tokens[b.index].Type != token.Accessor {
-		return b.AppendTokenToError("Could not get selection operator")
+		return nil, b.AppendTokenToError("Could not get selection operator")
 	}
 
 	// Step over the accessor

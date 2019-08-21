@@ -7,101 +7,6 @@ import (
 	token "github.com/scottshotgg/express-token"
 )
 
-func (b *Builder) ParseGroupOfExpressions() (*types.Node, error) {
-	// Check ourselves
-	if b.tokens[b.index].Type != token.LParen {
-		return b.AppendTokenToError("Could not get group of expressions")
-	}
-
-	// Skip over the left paren token
-	b.index++
-
-	var (
-		expr  *types.Node
-		exprs []*types.Node
-		err   error
-	)
-
-	for b.tokens[b.index].Type != token.RParen {
-		expr, err = b.ParseExpression()
-		if err != nil {
-			return expr, err
-		}
-
-		// Step over the expression token
-		b.index++
-
-		exprs = append(exprs, expr)
-
-		// Check and skip over the separator
-		if b.tokens[b.index].Type == token.Separator {
-			b.index++
-		}
-	}
-
-	// // Step over the right paren token
-	// b.index++
-
-	return &types.Node{
-		Type:  "egroup",
-		Value: exprs,
-	}, nil
-}
-
-func (b *Builder) ParseDerefExpression() (*types.Node, error) {
-	// Check ourselves ...
-	if b.tokens[b.index].Type != token.PriOp &&
-		b.tokens[b.index].Value.String == "*" {
-		return b.AppendTokenToError("Could not get deref")
-	}
-
-	// Look ahead and make sure it is an ident;you can't deref just anything...
-	if b.tokens[b.index+1].Type != token.Ident {
-		return b.AppendTokenToError("Could not get ident to deref")
-	}
-
-	// Step over the deref
-	b.index++
-
-	ident, err := b.ParseExpression()
-	if err != nil {
-		return ident, err
-	}
-
-	return &types.Node{
-		Type: "deref",
-		Left: ident,
-	}, nil
-}
-
-func (b *Builder) ParseRefExpression() (*types.Node, error) {
-	// Check ourselves ...
-	if b.tokens[b.index].Type != token.Ampersand &&
-		b.tokens[b.index].Value.String == "&" {
-		return b.AppendTokenToError("Could not get ref")
-	}
-
-	// Look ahead and make sure it is an ident; you can't ref anything...
-	if b.tokens[b.index+1].Type != token.Ident {
-		return b.AppendTokenToError("Could not get ident to ref")
-	}
-
-	// Step over the deref
-	b.index++
-
-	// Will probably have to change this to just parse the ident instead
-	// so we don't have problems with operator precedence
-	ident, err := b.ParseExpression()
-	if err != nil {
-		return ident, err
-	}
-
-	return &types.Node{
-		Type: "ref",
-		Left: ident,
-	}, nil
-}
-
 func (b *Builder) ParseExpression() (types.Expression, error) {
 	term, err := b.ParseTerm()
 	if err != nil {
@@ -133,7 +38,8 @@ func (b *Builder) ParseExpression() (types.Expression, error) {
 	return term, nil
 }
 
-func (b *Builder) ParseTerm() (*types.Node, error) {
+// TODO: Maybe even define types for Term and Factor
+func (b *Builder) ParseTerm() (types.Expression, error) {
 	factor, err := b.ParseFactor()
 	if err != nil {
 		return factor, err
@@ -170,7 +76,7 @@ func (b *Builder) ParseTerm() (*types.Node, error) {
 	return factor, nil
 }
 
-func (b *Builder) ParseFactor() (*types.Node, error) {
+func (b *Builder) ParseFactor() (types.Expression, error) {
 	// Here we will switch on the type and determine whether we have:
 	// - literal
 	// - ident
@@ -189,9 +95,7 @@ func (b *Builder) ParseFactor() (*types.Node, error) {
 	switch b.tokens[b.index].Type {
 	// Any literal value
 	case token.Literal:
-		return &types.Node{
-			Type:  "literal",
-			Kind:  b.tokens[b.index].Value.Type,
+		return &types.Literal{
 			Value: b.tokens[b.index].Value.True,
 		}, nil
 
@@ -204,102 +108,197 @@ func (b *Builder) ParseFactor() (*types.Node, error) {
 		// 	return node, nil
 		// }
 
-		return &types.Node{
-			Type:  "ident",
-			Value: b.tokens[b.index].Value.String,
+		return &types.Ident{
+			Token: b.tokens[b.index],
+			Name:  b.tokens[b.index].Value.String,
 		}, nil
 
-	// Deref operator
-	case token.PriOp:
-		return b.ParseDerefExpression()
+		// // Deref operator
+		// case token.PriOp:
+		// 	return b.ParseDerefExpression()
 
-	// Ref operator
-	case token.Ampersand:
-		return b.ParseRefExpression()
+		// // Ref operator
+		// case token.Ampersand:
+		// 	return b.ParseRefExpression()
 
-	// Nested expression
-	case token.LParen:
-		return b.ParseNestedExpression()
+		// // Nested expression
+		// case token.LParen:
+		// 	return b.ParseNestedExpression()
 
-	// Array expression
-	case token.LBracket:
-		return b.ParseArrayExpression()
+		// // Array expression
+		// case token.LBracket:
+		// 	return b.ParseArrayExpression()
 
-	// Named block
-	case token.LBrace:
-		var a, c = b.ParseBlockStatement()
-		// If this is an expression, then whatever called ParseExpression
-		// is going to increment the index again ...
-		b.index--
-		return a, c
+		// // Named block
+		// case token.LBrace:
+		// 	var a, c = b.ParseBlockStatement()
+		// 	// If this is an expression, then whatever called ParseExpression
+		// 	// is going to increment the index again ...
+		// 	b.index--
+		// 	return a, c
 	}
 
-	return b.AppendTokenToError("Could not parse expression from token")
+	return nil, b.AppendTokenToError("Could not parse expression from token")
 }
 
-func (b *Builder) ParseNestedExpression() (*types.Node, error) {
-	// Check ourselves
-	if b.tokens[b.index].Type != token.LParen {
-		return b.AppendTokenToError("Could not get nested expression")
-	}
+// func (b *Builder) ParseNestedExpression() (*types.Node, error) {
+// 	// Check ourselves
+// 	if b.tokens[b.index].Type != token.LParen {
+// 		return nil, b.AppendTokenToError("Could not get nested expression")
+// 	}
 
-	// Skip over the left paren
-	b.index++
+// 	// Skip over the left paren
+// 	b.index++
 
-	expr, err := b.ParseExpression()
-	if err != nil {
-		return expr, err
-	}
+// 	expr, err := b.ParseExpression()
+// 	if err != nil {
+// 		return expr, err
+// 	}
 
-	// Skip over the expression
-	b.index++
+// 	// Skip over the expression
+// 	b.index++
 
-	if b.tokens[b.index].Type != token.RParen {
-		return b.AppendTokenToError("No right paren found at end of nested expression")
-	}
+// 	if b.tokens[b.index].Type != token.RParen {
+// 		return nil, b.AppendTokenToError("No right paren found at end of nested expression")
+// 	}
 
-	// Skip over the right paren
-	b.index++
+// 	// Skip over the right paren
+// 	b.index++
 
-	return expr, nil
-}
+// 	return expr, nil
+// }
 
-func (b *Builder) ParseArrayExpression() (*types.Node, error) {
-	// Check ourselves
-	if b.tokens[b.index].Type != token.LBracket {
-		return b.AppendTokenToError("Could not get array expression")
-	}
+// func (b *Builder) ParseArrayExpression() (*types.Node, error) {
+// 	// Check ourselves
+// 	if b.tokens[b.index].Type != token.LBracket {
+// 		return nil, b.AppendTokenToError("Could not get array expression")
+// 	}
 
-	// Skip over the left bracket token
-	b.index++
+// 	// Skip over the left bracket token
+// 	b.index++
 
-	var (
-		expr  *types.Node
-		exprs []*types.Node
-		err   error
-	)
+// 	var (
+// 		expr  *types.Node
+// 		exprs []*types.Node
+// 		err   error
+// 	)
 
-	for b.index < len(b.tokens) && b.tokens[b.index].Type != token.RBracket {
-		expr, err = b.ParseExpression()
-		if err != nil {
-			return expr, err
-		}
+// 	for b.index < len(b.tokens) && b.tokens[b.index].Type != token.RBracket {
+// 		expr, err = b.ParseExpression()
+// 		if err != nil {
+// 			return expr, err
+// 		}
 
-		b.index++
+// 		b.index++
 
-		exprs = append(exprs, expr)
+// 		exprs = append(exprs, expr)
 
-		// Check and skip over the separator
-		if b.tokens[b.index].Type == token.Separator {
-			b.index++
-		}
-	}
+// 		// Check and skip over the separator
+// 		if b.tokens[b.index].Type == token.Separator {
+// 			b.index++
+// 		}
+// 	}
 
-	// // Step over the right bracket token
-	// b.index++
+// 	// // Step over the right bracket token
+// 	// b.index++
 
-	return &types.Node{
-		Type:  "array",
-		Value: exprs,
-	}, nil
-}
+// 	return &types.Node{
+// 		Type:  "array",
+// 		Value: exprs,
+// 	}, nil
+// }
+
+// func (b *Builder) ParseGroupOfExpressions() (*types.Node, error) {
+// 	// Check ourselves
+// 	if b.tokens[b.index].Type != token.LParen {
+// 		return nil, b.AppendTokenToError("Could not get group of expressions")
+// 	}
+
+// 	// Skip over the left paren token
+// 	b.index++
+
+// 	var (
+// 		expr  *types.Node
+// 		exprs []*types.Node
+// 		err   error
+// 	)
+
+// 	for b.tokens[b.index].Type != token.RParen {
+// 		expr, err = b.ParseExpression()
+// 		if err != nil {
+// 			return expr, err
+// 		}
+
+// 		// Step over the expression token
+// 		b.index++
+
+// 		exprs = append(exprs, expr)
+
+// 		// Check and skip over the separator
+// 		if b.tokens[b.index].Type == token.Separator {
+// 			b.index++
+// 		}
+// 	}
+
+// 	// // Step over the right paren token
+// 	// b.index++
+
+// 	return &types.Node{
+// 		Type:  "egroup",
+// 		Value: exprs,
+// 	}, nil
+// }
+
+// func (b *Builder) ParseDerefExpression() (*types.Expression, error) {
+// 	// Check ourselves ...
+// 	if b.tokens[b.index].Type != token.PriOp &&
+// 		b.tokens[b.index].Value.String == "*" {
+// 		return nil, b.AppendTokenToError("Could not get deref")
+// 	}
+
+// 	// Look ahead and make sure it is an ident;you can't deref just anything...
+// 	if b.tokens[b.index+1].Type != token.Ident {
+// 		return nil, b.AppendTokenToError("Could not get ident to deref")
+// 	}
+
+// 	// Step over the deref
+// 	b.index++
+
+// 	ident, err := b.ParseExpression()
+// 	if err != nil {
+// 		return ident, err
+// 	}
+
+// 	return &types.Node{
+// 		Type: "deref",
+// 		Left: ident,
+// 	}, nil
+// }
+
+// func (b *Builder) ParseRefExpression() (*types.Node, error) {
+// 	// Check ourselves ...
+// 	if b.tokens[b.index].Type != token.Ampersand &&
+// 		b.tokens[b.index].Value.String == "&" {
+// 		return nil, b.AppendTokenToError("Could not get ref")
+// 	}
+
+// 	// Look ahead and make sure it is an ident; you can't ref anything...
+// 	if b.tokens[b.index+1].Type != token.Ident {
+// 		return nil, b.AppendTokenToError("Could not get ident to ref")
+// 	}
+
+// 	// Step over the deref
+// 	b.index++
+
+// 	// Will probably have to change this to just parse the ident instead
+// 	// so we don't have problems with operator precedence
+// 	ident, err := b.ParseExpression()
+// 	if err != nil {
+// 		return ident, err
+// 	}
+
+// 	return &types.Node{
+// 		Type: "ref",
+// 		Left: ident,
+// 	}, nil
+// }

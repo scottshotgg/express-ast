@@ -6,11 +6,30 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/scottshotgg/express-token"
+	token "github.com/scottshotgg/express-token"
 )
 
+type Literal struct {
+	Token token.Token
+	Value interface{}
+}
+
+func (l *Literal) expressionNode() {}
+
+// TokenLiteral returns the literal value of the token
+func (l *Literal) TokenLiteral() token.Token { return l.Token }
+
+// Type implements literal
+func (l *Literal) Type() *Type { return &Type{} }
+
+func (l *Literal) Kind() NodeType { return LiteralNode }
+
+func (l *Literal) String() string {
+	return fmt.Sprint(l.Value)
+}
+
 // Literal is an abstract type that represents a literal value, in constrtypes with a value-producer, such as an expression
-type Literal interface {
+type OldLiteral_do_not_use interface {
 	Expression
 }
 
@@ -257,48 +276,48 @@ func TypeFromString(t string) *Type {
 	return nil
 }
 
-func NewLiteral(t token.Token, ty *Type) Literal {
-	if ty.Array {
-		fmt.Println("fucking array", ty.Name)
-		return &Array{
-			Token:       t,
-			TypeOf:      NewArrayType(ty, true),
-			ElementType: TypeFromString(ty.Name),
-			Length:      0,
-			Elements:    []Expression{},
-			Homogenous:  true,
-		}
-	}
+// func NewLiteral(t token.Token, ty *Type) Literal {
+// 	if ty.Array {
+// 		fmt.Println("fucking array", ty.Name)
+// 		return &Array{
+// 			Token:       t,
+// 			TypeOf:      NewArrayType(ty, true),
+// 			ElementType: TypeFromString(ty.Name),
+// 			Length:      0,
+// 			Elements:    []Expression{},
+// 			Homogenous:  true,
+// 		}
+// 	}
 
-	switch ty.Type {
-	case IntType:
-		return NewInt(t, 0)
+// 	switch ty.Type {
+// 	case IntType:
+// 		return NewInt(t, 0)
 
-	case BoolType:
-		return NewBool(t, false)
+// 	case BoolType:
+// 		return NewBool(t, false)
 
-	case FloatType:
-		return NewFloat(t, 0.0)
+// 	case FloatType:
+// 		return NewFloat(t, 0.0)
 
-	case CharType:
-		return NewChar(t, 0)
+// 	case CharType:
+// 		return NewChar(t, 0)
 
-	case StringType:
-		return NewString(t, "")
+// 	case StringType:
+// 		return NewString(t, "")
 
-	case VarType:
-		// The default value for a var is the integer 0 because it reduces memory
-		// footprint and is the letypes complicated value to containerize
-		return NewVarFromInt(t, 0)
+// 	case VarType:
+// 		// The default value for a var is the integer 0 because it reduces memory
+// 		// footprint and is the letypes complicated value to containerize
+// 		return NewVarFromInt(t, 0)
 
-	case ObjectType:
-		return NewObject(t, Block{})
-	}
+// 	case ObjectType:
+// 		return NewObject(t, Block{})
+// 	}
 
-	fmt.Println("TYPE WAS NOT DEFINED IN NewLiteral()")
-	os.Exit(9)
-	return nil
-}
+// 	fmt.Println("TYPE WAS NOT DEFINED IN NewLiteral()")
+// 	os.Exit(9)
+// 	return nil
+// }
 
 // NewInt returns a new int literal
 func NewInt(t token.Token, value int) *IntLiteral {
