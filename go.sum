@@ -1,6 +1,9 @@
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
-github.com/pkg/errors v0.8.0 h1:WdK/asTD0HN+q6hsWO3/vpuAkAr+tw6aNJNDFFf0+qw=
-github.com/pkg/errors v0.8.0/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
-github.com/scottshotgg/express-token v0.0.0-20190114120617-cfbdb912cfa9 h1:hiPnWMpPDIBouh8EZhGSy5RrLaCrOi5vtkgUq/a5OtA=
+github.com/pkg/errors v0.8.1 h1:iURUrRGxPUNPdy5/HRSm+Yj6okJ6UtLINN0Q9M4+h3I=
+github.com/pkg/errors v0.8.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
+github.com/scottshotgg/express-lex v0.0.0-20190816233540-eb22f05bde7e h1:/5+5ri/OarKZzoyGd4bsWGdOuh6vqAQER4vInqGMB4I=
+github.com/scottshotgg/express-lex v0.0.0-20190816233540-eb22f05bde7e/go.mod h1:mki6lAPAnXcJVZFuz72CYHiwivJ0SCOTwV7+UoG3ns8=
 github.com/scottshotgg/express-token v0.0.0-20190114120617-cfbdb912cfa9/go.mod h1:JPaW0KZyjv8d+pQ2QlyVRwWtOAmjoWPoMHQYSCFppiM=
+github.com/scottshotgg/express-token v0.0.0-20190816231727-78f862b0ae0d h1:LzuVWmFYDOBNdJKmjvOyadcf8lzZGZvGjjd6gPn6zpY=
+github.com/scottshotgg/express-token v0.0.0-20190816231727-78f862b0ae0d/go.mod h1:Vg55SoWnFxKPHiV8GkweF8wCxmkH2/eyoKt3zh/3IsM=

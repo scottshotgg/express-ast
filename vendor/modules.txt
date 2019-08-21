@@ -1,4 +1,8 @@
 # github.com/davecgh/go-spew v1.1.1
 github.com/davecgh/go-spew/spew
-# github.com/pkg/errors v0.8.0
+# github.com/pkg/errors v0.8.1
 github.com/pkg/errors
+# github.com/scottshotgg/express-lex v0.0.0-20190816233540-eb22f05bde7e
+github.com/scottshotgg/express-lex
+# github.com/scottshotgg/express-token v0.0.0-20190816231727-78f862b0ae0d
+github.com/scottshotgg/express-token
