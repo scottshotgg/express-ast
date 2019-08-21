@@ -3,9 +3,9 @@ package types
 import (
 	"fmt"
 
-	"github.com/pkg/errors"
+	token "github.com/scottshotgg/express-token"
 
-	"github.com/scottshotgg/express-token"
+	"github.com/pkg/errors"
 )
 
 // AssignmentType encompasses the different types of assignment
@@ -17,9 +17,6 @@ const (
 
 	// Set is the : operator
 	Set
-
-	// Init is the := operator
-	Init
 )
 
 // Assignment statement represents the following form:
@@ -30,8 +27,8 @@ type Assignment struct {
 	Token       token.Token
 	Type        AssignmentType
 	// For now put Expression here but I think this should be a type `Assignable` where an Expression implements an `Assignable` property
-	LHS Expression
-	RHS Expression
+	Left  Expression
+	Right Expression
 }
 
 // When going through the logic for this:
@@ -63,7 +60,7 @@ func (a Assignment) String() string {
 	// 	return fmt.Sprintf("%s %s = %s", a.LHS a.RHS, a.LHS)
 	// }
 
-	return fmt.Sprintf("%s = %s;", a.LHS, a.RHS)
+	return fmt.Sprintf("%s = %s;", a.Left, a.Right)
 }
 
 // TODO: dont think I wanna do this yet
@@ -81,16 +78,11 @@ func NewAssignment(t token.Token, i *Ident, e Expression) (*Assignment, error) {
 
 	as := Assignment{
 		Token: t,
-		LHS:   i,
-		RHS:   e,
+		Left:  i,
+		Right: e,
 	}
 
 	switch t.Value.String {
-	case ":=":
-		as.Type = Init
-		as.Declaration = true
-		as.Inferred = true
-
 	case ":":
 		as.Type = Set
 		as.Declaration = true

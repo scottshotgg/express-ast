@@ -10,10 +10,6 @@ type Builder struct {
 	index  int
 }
 
-func (b *Builder) GetStatement() (types.Statement, error) {
-	return &types.Import{}, nil
-}
-
 func New(tokens []token.Token) *Builder {
 	return &Builder{
 		tokens: tokens,

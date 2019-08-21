@@ -1,0 +1,983 @@
+
+func (b *Builder) ParseDeferStatement() (*types.Defer, error) {
+	// Check ourselves
+	if b.tokens[b.index].Type != token.Defer {
+		return b.AppendTokenToError("Could not get group of statements")
+	}
+
+	// Step over the defer token
+	b.index++
+
+	var stmt, err = b.ParseStatement()
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.Node{
+		Type: "defer",
+		Left: stmt,
+	}, nil
+}
+
+func (b *Builder) ParseGroupOfStatements() (*types.Group, error) {
+	// Check ourselves
+	if b.tokens[b.index].Type != token.LParen {
+		return b.AppendTokenToError("Could not get group of statements")
+	}
+
+	// Skip over the left paren token
+	b.index++
+
+	var (
+		stmt  *types.Node
+		stmts []*types.Node
+		err   error
+	)
+
+	for b.tokens[b.index].Type != token.RParen {
+		stmt, err = b.ParseStatement()
+		if err != nil {
+			return nil, err
+		}
+
+		stmts = append(stmts, stmt)
+
+		// Check and skip over the separator
+		if b.tokens[b.index].Type == token.Separator {
+			b.index++
+		}
+	}
+
+	// Step over the right brace token
+	b.index++
+
+	return &types.Node{
+		Type:  "sgroup",
+		Value: stmts,
+	}, nil
+}
+
+func (b *Builder) ParseForPrepositionStatement() (*types.Loop, error) {
+	// Check ourselves ...
+	if b.tokens[b.index].Type != token.For {
+		return b.AppendTokenToError("Could not get for in")
+	}
+
+	// Step over the for token
+	b.index++
+
+	// Parse the ident before the `in` token
+	var ident, err = b.ParseExpression()
+	if err != nil {
+		return nil, err
+	}
+
+	// Step over the ident token
+	b.index++
+
+	var prepType string
+
+	switch b.tokens[b.index].Value.String {
+	case "in":
+		prepType = "forin"
+
+	case "of":
+		prepType = "forof"
+
+	default:
+		return b.AppendTokenToError("Could not get preposition")
+	}
+
+	// Step over the preposition
+	b.index++
+
+	// Parse the array/expression
+	array, err := b.ParseExpression()
+	if err != nil {
+		return nil, err
+	}
+
+	// TODO: we also need to parse here to figure out if this array is an ident
+
+	b.index++
+
+	body, err := b.ParseBlockStatement()
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.Node{
+		Type:  prepType,
+		Value: body,
+		Metadata: map[string]interface{}{
+			"start": ident,
+			"end":   array,
+		},
+	}, nil
+}
+
+func (b *Builder) ParseForStdStatement() (*types.Loop, error) {
+	// Check ourselves ...
+	if b.tokens[b.index].Type != token.For {
+		return b.AppendTokenToError("Could not get for std")
+	}
+
+	// Step over the for token
+	b.index++
+
+	// Parse the declaration or assignment statement
+	stmt, err := b.ParseStatement()
+	if err != nil {
+		return nil, err
+	}
+
+	node := types.Node{
+		Type: "forstd",
+		Metadata: map[string]interface{}{
+			"start": stmt,
+		},
+	}
+
+	// Check and skip over the separator
+	if b.tokens[b.index].Type == token.Separator {
+		b.index++
+	}
+
+	// Parse the bounding conditional (expression)
+	// Might want to make specific functions like `ParseConditional`
+	// if we know we need it
+	node.Metadata["end"], err = b.ParseExpression()
+	if err != nil {
+		return nil, err
+	}
+
+	b.index++
+
+	// Check and skip over the separator
+	if b.tokens[b.index].Type == token.Separator {
+		b.index++
+	}
+
+	// Parse the increment
+	node.Metadata["step"], err = b.ParseExpression()
+	if err != nil {
+		return nil, err
+	}
+
+	b.index++
+
+	// Check and skip over the separator
+	if b.tokens[b.index].Type == token.Separator {
+		b.index++
+	}
+
+	node.Value, err = b.ParseBlockStatement()
+	if err != nil {
+		return nil, err
+	}
+
+	return &node, nil
+}
+
+func (b *Builder) ParseForStatement() (*types.Loop, error) {
+	// Check ourselves ...
+	if b.tokens[b.index].Type != token.For {
+		return b.AppendTokenToError("Could not get for std")
+	}
+
+	if b.index > len(b.tokens)-2 {
+		return nil, ErrOutOfTokens
+	}
+
+	// For right now just look ahead two
+	if b.tokens[b.index+2].Type == token.Keyword {
+		return b.ParseForPrepositionStatement()
+	}
+
+	return b.ParseForStdStatement()
+}
+
+func (b *Builder) ParseIfStatement() (*types.IfElse, error) {
+	// Check ourselves ...
+	if b.tokens[b.index].Type != token.If {
+		return b.AppendTokenToError("Could not get if")
+	}
+
+	// Step over the if token
+	b.index++
+
+	// if EXPR BLOCK
+	condition, err := b.ParseExpression()
+	if err != nil {
+		return nil, err
+	}
+
+	// Step over the expression
+	// TODO: this will have to move inside the expression I think
+	b.index++
+
+	n := types.Node{
+		Type:  "if",
+		Value: condition,
+	}
+
+	n.Left, err = b.ParseBlockStatement()
+	if err != nil {
+		return nil, err
+	}
+
+	if b.index < len(b.tokens)-1 && b.tokens[b.index].Type == token.Else {
+		// Step over the else token
+		b.index++
+
+		// Check for an else if
+		if b.tokens[b.index].Type == token.If {
+			n.Right, err = b.ParseIfStatement()
+			if err != nil {
+				return nil, err
+			}
+		} else {
+			n.Right, err = b.ParseBlockStatement()
+			if err != nil {
+				return nil, err
+			}
+		}
+	}
+
+	return &n, nil
+}
+
+func (b *Builder) ParseMapBlockStatement() (*types.Map, error) {
+	// Check ourselves ...
+	if b.tokens[b.index].Type != token.LBrace {
+		return b.AppendTokenToError("Could not get left brace")
+	}
+
+	// Increment over the left brace token
+	b.index++
+
+	var (
+		stmt  *types.Node
+		stmts []*types.Node
+		err   error
+	)
+
+	for b.index < len(b.tokens) &&
+		b.tokens[b.index].Type != token.RBrace {
+		stmt, err = b.ParseStatement()
+		if err != nil {
+			return nil, err
+		}
+
+		// All statements in a map have to be key-value pairs
+		if stmt.Type != "kv" {
+			return nil, errors.Errorf("All statements in a map have to be key-value pairs: %+v\n", stmt)
+		}
+
+		stmts = append(stmts, stmt)
+	}
+
+	// Step over the right brace token
+	b.index++
+
+	return &types.Node{
+		Type:  "block",
+		Value: stmts,
+	}, nil
+}
+
+func (b *Builder) ParseEnumBlockStatement() (*types.Enum, error) {
+	// Increment over the enum keyword
+	b.index++
+
+	// Check ourselves ...
+	if b.tokens[b.index].Type != token.LBrace {
+		return b.AppendTokenToError("Could not get left brace")
+	}
+
+	// Increment over the left brace token
+	b.index++
+
+	var (
+		stmt  *types.Node
+		stmts []*types.Node
+		err   error
+	)
+
+	for b.index < len(b.tokens) &&
+		b.tokens[b.index].Type != token.RBrace {
+		stmt, err = b.ParseStatement()
+		if err != nil {
+			// Recover the parse if it gets the right error
+			if err != ErrNoEqualsFoundAfterIdent {
+				return nil, err
+			}
+		}
+
+		// All statements in a map have to be key-value
+		// This isn't true wtf
+		if stmt.Type != "assignment" && stmt.Type != "ident" {
+			return nil, errors.Errorf("All statements in a enum have to be assignment or ident: %+v\n", stmt)
+		}
+
+		stmts = append(stmts, stmt)
+	}
+
+	// Step over the right brace token
+	b.index++
+
+	return &types.Node{
+		Type: "enum",
+		Left: &types.Node{
+			Type:  "block",
+			Value: stmts,
+		},
+	}, nil
+}
+
+func (b *Builder) ParseBlockStatement() (*types.Block, error) {
+	// Check ourselves ...
+	if b.tokens[b.index].Type != token.LBrace {
+		return b.AppendTokenToError("Could not get left brace")
+	}
+
+	// Increment over the left brace token
+	b.index++ // Create a new child scope for the function
+
+	var (
+		stmt  *types.Node
+		stmts []*types.Node
+		err   error
+	)
+
+	for b.index < len(b.tokens) &&
+		b.tokens[b.index].Type != token.RBrace {
+		stmt, err = b.ParseStatement()
+		if err != nil {
+			return nil, err
+		}
+		// fmt.Println("i am here", stmt)
+
+		stmts = append(stmts, stmt)
+	}
+
+	// Step over the right brace token
+	b.index++
+
+	return &types.Node{
+		Type:  "block",
+		Value: stmts,
+	}, nil
+}
+
+func (b *Builder) ParseReturnStatement() (*types.Return, error) {
+	// Check ourselves ...
+	if b.tokens[b.index].Type != token.Return {
+		return b.AppendTokenToError("Could not get return")
+	}
+
+	// Skip over the `return` token
+	b.index++
+
+	// If there is a newline, the return is void typed
+	if b.index < len(b.tokens) &&
+		b.tokens[b.index].Value.Type == "newline" {
+		b.index++
+
+		return &types.Node{
+			Type: "return",
+		}, nil
+	}
+
+	// we are only supporting one return value for now
+	expr, err := b.ParseExpression()
+	if err != nil {
+		return nil, err
+	}
+
+	// Step over the expression token
+	b.index++
+
+	return &types.Node{
+		Type: "return",
+		Left: expr,
+	}, nil
+}
+
+func (b *Builder) ParseTypeDeclarationStatement() (*types.Type, error) {
+	// Check ourselves ...
+	if b.index < len(b.tokens)-1 &&
+		b.tokens[b.index].Type != token.TypeDef {
+		return b.AppendTokenToError("Could not get type declaration statement")
+	}
+
+	// Skip over the `type` token
+	b.index++
+
+	// Create the ident
+	ident, err := b.ParseExpression()
+	if err != nil {
+		return nil, err
+	}
+
+	// Increment over the ident token
+	b.index++
+
+	// Check for the equals token
+	if b.tokens[b.index].Type != token.Assign {
+		return b.AppendTokenToError("No equals found after ident in typedef")
+	}
+
+	// Increment over the equals
+	b.index++
+
+	// Parse the right hand side
+	typeOf, err := b.ParseType(nil)
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = b.AddPrimitive(ident.Value.(string), typeOf)
+	if err != nil {
+		return nil, err
+	}
+
+	// // Increment over the first part of the expression
+	// b.index++
+
+	return &types.Node{
+		Type:  "typedef",
+		Left:  ident,
+		Right: typeOf,
+	}, nil
+}
+
+func (b *Builder) ParseCBlock() (*types.CBlock, error) {
+	var errStatement = "`c` blocks, as the are oh-so affectionately known within the Express community, are only implemented as a direct code injection  at time. This will take some thinking; the compiler will have to `back-compile` the C/C++ code FROM the AST output of Clang and then translate that back into Express code essentially to check it"
+	// return nil, errors.New()
+	log.Println(errStatement)
+
+	// For now the C block will be a direct injection of code into the final source. This is the best we can get at this point
+
+	// ADD THIS BACK IN
+	// // Check ourselves ...
+	// if b.tokens[b.index].Type != token.C {
+	// 	return b.AppendTokenToError("Could not get c block")
+	// }
+
+	// Skip over the `c` token
+	b.index++
+
+	var (
+		total []string
+		found bool
+	)
+
+	// Gobble up all the code until the next left brace; use a simple array as a stack to know when we are done
+	for _, t := range b.tokens[b.index:] {
+		fmt.Println("t", t)
+
+		if t.Type == token.RBrace {
+			found = true
+			break
+		}
+
+		// Append the string value of the token
+		total = append(total, t.Value.String)
+
+		// Increment the index so that the gobbling reflects when we jump out of scope
+		b.index++
+	}
+
+	if !found {
+		return nil, errors.New("No matching right brace found for c block")
+	}
+
+	// Skip over the rbrace
+	b.index++
+
+	return &types.Node{
+		Type:  "c",
+		Value: strings.Join(total, " "),
+	}, nil
+}
+
+func (b *Builder) ParseStructStatement() (*types.Struct, error) {
+	// Check ourselves ...
+	if b.tokens[b.index].Type != token.Struct {
+		return b.AppendTokenToError("Could not get struct declaration statement")
+	}
+
+	// Skip over the `struct` token
+	b.index++
+
+	// Create the ident
+	ident, err := b.ParseExpression()
+	if err != nil {
+		return nil, err
+	}
+
+	// Increment over the ident token
+	b.index++
+
+	// Create a new child scope for the function
+	b.ScopeTree, err = b.ScopeTree.NewChildScope(ident.Value.(string))
+	if err != nil {
+		return nil, err
+	}
+
+	// Check for the equals token
+	if b.tokens[b.index].Type != token.Assign {
+		return b.AppendTokenToError("No equals found after ident in struct def")
+	}
+
+	// Increment over the equals
+	b.index++
+
+	// Parse the right hand side
+	body, err := b.ParseBlockStatement()
+	if err != nil {
+		return nil, err
+	}
+
+	body.Kind = "struct"
+
+	// _, err = b.AddStructured(ident.Value.(string), body)
+	// if err != nil {
+	// 	return nil, err
+	// }
+
+	var v = &TypeValue{
+		Composite: true,
+		Type:      StruturedValue,
+		Kind:      body.Kind,
+	}
+
+	v.Props, err = b.extractPropsFromComposite(body)
+	if err != nil {
+		return nil, err
+	}
+
+	// // Increment over the first part of the expression
+	// b.index++
+
+	// Assign our scope back to the current one
+	b.ScopeTree, err = b.ScopeTree.Leave()
+	if err != nil {
+		return nil, err
+	}
+
+	err = b.ScopeTree.NewType(ident.Value.(string), v)
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.Node{
+		Type:  "struct",
+		Left:  ident,
+		Right: body,
+	}, nil
+}
+
+func (b *Builder) ParseMapStatement() (*types.Map, error) {
+	// Check ourselves ...
+	if b.tokens[b.index].Type != token.Map {
+		return b.AppendTokenToError("Could not get map declaration statement")
+	}
+
+	// Skip over the `map` token
+	b.index++
+
+	// Create the ident
+	ident, err := b.ParseExpression()
+	if err != nil {
+		return nil, err
+	}
+
+	// Increment over the ident token
+	b.index++
+
+	// Create a new child scope for the function
+	b.ScopeTree, err = b.ScopeTree.NewChildScope(ident.Value.(string))
+	if err != nil {
+		return nil, err
+	}
+
+	// Check for the equals token
+	if b.tokens[b.index].Type != token.Assign {
+		return b.AppendTokenToError("No equals found after ident in map declaration")
+	}
+
+	// Increment over the equals
+	b.index++
+
+	// Parse the right hand side
+	body, err := b.ParseMapBlockStatement()
+	if err != nil {
+		return nil, err
+	}
+
+	body.Kind = "map"
+
+	// Assign our scope back to the current one
+	b.ScopeTree, err = b.ScopeTree.Leave()
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.Node{
+		Type:  "map",
+		Left:  ident,
+		Right: body,
+	}, nil
+}
+
+func (b *Builder) ParseLetStatement() (*types.Let, error) {
+	// Check ourselves ...
+	if b.tokens[b.index].Type != token.Let {
+		return b.AppendTokenToError("Could not get let statement")
+	}
+
+	// Skip over the let token
+	b.index++
+
+	ident, err := b.ParseExpression()
+	if err != nil {
+		return nil, err
+	}
+
+	// Increment over the ident token
+	b.index++
+
+	// Check for the equals token
+	if b.tokens[b.index].Type != token.Assign {
+		// This is where we would implement variable declarations
+		// without values, other types of assignment, etc
+		// Leave it alone for now
+		return b.AppendTokenToError("No equals found after ident in let")
+	}
+
+	// Increment over the equals
+	b.index++
+
+	// Parse the right hand side
+	expr, err := b.ParseExpression()
+	if err != nil {
+		return nil, err
+	}
+
+	// Increment over the first part of the expression
+	b.index++
+
+	return &types.Node{
+		Type:  "let",
+		Left:  ident,
+		Right: expr,
+	}, nil
+}
+
+func (b *Builder) ParsePackageStatement() (*types.Package, error) {
+	// Check ourselves ...
+	if b.tokens[b.index].Type != token.Package {
+		return b.AppendTokenToError("Could not get package statement")
+	}
+
+	// Step over the package token
+	b.index++
+
+	expr, err := b.ParseExpression()
+	if err != nil {
+		return nil, err
+	}
+
+	// Step over the literal
+	b.index++
+
+	// Get the rest of the statements
+	// We will need to get all of the files in the folder
+	// Grab the rest of the statements in the folder and assign them to this node
+	// Use the semantic compiler to sort out multiple files in a package
+
+	var stmts []*types.Node
+	for b.index < len(b.tokens)-1 {
+		stmt, err := b.ParseStatement()
+		if err != nil {
+			if err == ErrOutOfTokens {
+				break
+			}
+
+			return nil, err
+		}
+
+		// Just a fallback; probably won't need it later
+		if stmt == nil {
+			return b.AppendTokenToError("Statement was nil")
+		}
+
+		stmts = append(stmts, stmt)
+		fmt.Println("STMT", stmt)
+	}
+
+	return &types.Node{
+		Type: "package",
+		Left: expr,
+		Right: &types.Node{
+			Type:  "block",
+			Value: stmts,
+		},
+	}, nil
+}
+
+func (b *Builder) ParseUseStatement() (*types.Use, error) {
+
+	// TODO: add this back in
+	// Check ourselves ...
+	// if b.tokens[b.index].Type != token.Use {
+	// 	return b.AppendTokenToError("Could not get use statement")
+	// }
+
+	// Step over the import token
+	b.index++
+
+	// This expression takes the same rules as import/include with quotes and no quotes
+	expr, err := b.ParseExpression()
+	if err != nil {
+		return nil, err
+	}
+
+	// Step over the literal
+	b.index++
+
+	// With a use statement, we are expecting an as operation afterwards and then another _ident_
+	// I don't know or want to add "as" as a keyword right now, not sure it has much use; however, it needs to be checked nevertheless
+	expr1, err := b.ParseExpression()
+	if err != nil {
+		return nil, err
+	}
+
+	if expr1.Type != "ident" {
+		// Just print out the entire expression for now
+		return nil, errors.Errorf("Expecting \"as\" keyword after use expression, found: %+v", expr)
+	}
+
+	// Hop over the "as"
+	b.index++
+
+	// Next up: we are expecting an _ident_; parse it as an expression so operation rules will apply
+	// Not sure if that is needed (operation rules), but we'll see; could be a fun/fucky experiment
+	expr1, err = b.ParseExpression()
+	if err != nil {
+		return nil, err
+	}
+
+	// May have to mangle the names for this ;_; noooooo
+	if expr1.Type != "ident" {
+		// Just print out the entire expression for now
+		return nil, errors.Errorf("Expecting ident expression after as keyword, found: %+v", expr)
+	}
+
+	// And finally, hop over the ending ident
+	b.index++
+
+	return &types.Node{
+		Type:  "use",
+		Left:  expr,
+		Right: expr1,
+	}, nil
+}
+
+func (b *Builder) ParseImportStatement() (*types.Import, error) {
+	// Check ourselves ...
+	if b.tokens[b.index].Type != token.Import {
+		return b.AppendTokenToError("Could not get import statement")
+	}
+
+	// Step over the import token
+	b.index++
+
+	expr, err := b.ParseExpression()
+	if err != nil {
+		return nil, err
+	}
+
+	// Now that we have the expression, we need to go parse that file
+	// 1. Parse the file
+	// 2. Use a variable to link the file
+	// 3. Normal selection checking after that
+	// 4. Take special care for transpileImportStatement
+
+	fmt.Println("expr.Kind", expr.Value.(string))
+
+	if expr.Value.(string) == "c" {
+		b.index++
+		return &types.Node{
+			Type: "import",
+			Kind: "c",
+		}, nil
+	}
+
+	// TODO: Later on we will need to check this whether it is a module, file, or remote
+	ast, scope, err := b.parseFileImport(expr.Value.(string))
+	if err != nil {
+		return nil, err
+	}
+
+	// Spawn a new scopetree
+	scopeTree, err := b.ScopeTree.NewChildScope(ast.Value.([]*types.Node)[0].Left.Value.(string))
+	if err != nil {
+		return nil, err
+	}
+
+	// Set the new scope trees value to the scope retrieved from the file
+	*scopeTree = *scope
+
+	// Step over the literal
+	b.index++
+
+	// b.ScopeTree, err = b.ScopeTree.Leave()
+	// if err != nil {
+	// 	return nil, err
+	// }
+
+	return &types.Node{
+		Type:  "import",
+		Left:  expr,
+		Right: ast,
+	}, nil
+}
+
+func (b *Builder) ParseIncludeStatement() (*types.Include, error) {
+	// Check ourselves ...
+	if b.tokens[b.index].Type != token.Include {
+		return b.AppendTokenToError("Could not get include statement")
+	}
+
+	// Step over the import token
+	b.index++
+
+	expr, err := b.ParseExpression()
+	if err != nil {
+		return nil, err
+	}
+
+	// Step over the literal
+	b.index++
+
+	return &types.Node{
+		Type: "include",
+		Left: expr,
+	}, nil
+}
+
+func (b *Builder) ParseFunctionStatement() (*types.Function, error) {
+	// Check ourselves
+	if b.tokens[b.index].Type != token.Function {
+		return b.AppendTokenToError("Could not get function")
+	}
+
+	// Step over the function token
+	b.index++
+
+	var (
+		err  error
+		node = types.Node{
+			Type:     "function",
+			Metadata: map[string]interface{}{},
+		}
+	)
+
+	// Named function
+	if b.tokens[b.index].Type != token.Ident {
+		return b.AppendTokenToError("Could not get ident after function token")
+	}
+
+	// Set the name of the function
+	node.Kind = b.tokens[b.index].Value.String
+
+	// Create a new child scope for the function
+	b.ScopeTree, err = b.ScopeTree.NewChildScope(node.Kind)
+	if err != nil {
+		return nil, err
+	}
+
+	// Step over the ident token
+	b.index++
+
+	if b.tokens[b.index].Type != token.LParen {
+		return b.AppendTokenToError("Could not get left paren")
+	}
+
+	args, err := b.ParseGroupOfStatements()
+	if err != nil {
+		return nil, err
+	}
+
+	if args != nil {
+		node.Metadata["args"] = args
+	}
+
+	// Might want to avoid putting this here if we don't have any
+
+	// We are not supporting multiple returns for now
+	// // Check for multiple returns;another left paren
+	// if b.tokens[b.index].Type == token.LParen {
+	// 	return nil, errors.New("Could not get returns")
+	// }
+
+	var returnType = b.tokens[b.index].Value.String
+
+	// We are not supporting named arguments for now
+	// Check for the return type token
+	if b.tokens[b.index].Type == token.Type {
+		node.Metadata["returns"] = &types.Node{
+			Type:  "type",
+			Value: returnType,
+		}
+
+		// Step over the type token
+		b.index++
+	}
+
+	// If the function is named main then check that it returns an int
+	// If it doesn't have any return type then apply an int return
+	// If it already has a return type that is not int then that is an error
+	if node.Kind == "main" {
+		if node.Metadata["returns"] != nil {
+			// Add this later
+			// if len(node.Metadata["returns"].([]*types.Node)) > 1 {
+			// 	return nil, errors.New("main can only have one return")
+			// }
+
+			if returnType != "int" {
+				return nil, errors.New("main can only return an int type")
+			}
+		}
+
+		// Apply the int return
+		node.Metadata["returns"] = &types.Node{
+			Type:  "type",
+			Value: "int",
+		}
+	}
+
+	node.Value, err = b.ParseBlockStatement()
+	if err != nil {
+		return nil, err
+	}
+
+	// node.Value = addDeferDeclarationToBlock(block)
+
+	// Assign our scope back to the current one
+	b.ScopeTree, err = b.ScopeTree.Leave()
+	if err != nil {
+		return nil, err
+	}
+
+	// Declare the type in the upper scope after leaving
+	err = b.ScopeTree.Declare(&node)
+	if err != nil {
+		return nil, err
+	}
+
+	return &node, nil
+}

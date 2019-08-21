@@ -1,10 +1,9 @@
 package types
 
 import (
+	"go/token"
 	"strings"
 	"sync"
-
-	"github.com/scottshotgg/express-token"
 )
 
 // If we want to allow objects to contain statements in Express objects,
@@ -17,10 +16,6 @@ import (
 type Block struct {
 	Token      token.Token
 	Statements []Statement
-
-	// TODO: Need to solve where this goes. I think it should go in the parser information,
-	// but if that's the case then it'll be a bit hard to link an object property
-	Scope map[string]Expression
 }
 
 // TODO: implement expression
