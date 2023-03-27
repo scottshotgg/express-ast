@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/scottshotgg/express-token"
+	token "github.com/scottshotgg/express-token"
 )
 
 // Literal is an abstract type that represents a literal value, in constrast with a value-producer, such as an expression
@@ -246,7 +246,8 @@ func TypeFromString(t string) *Type {
 		return NewStringType()
 
 	case "var":
-		return NewVarType(VarType)
+		// TODO: fix this - we are just passing an int type here for now
+		return NewVarType(NewIntType())
 
 	case "object":
 		return NewObjectType()
@@ -375,7 +376,7 @@ func NewObject(t token.Token, value Block) *ObjectLiteral {
 func NewVarFromInt(t token.Token, value int) *VarLiteral {
 	return &VarLiteral{
 		Token:  t,
-		TypeOf: NewVarType(IntType),
+		TypeOf: NewVarType(NewIntType()),
 		Value:  value,
 	}
 }
@@ -384,7 +385,7 @@ func NewVarFromInt(t token.Token, value int) *VarLiteral {
 func NewVarFromBool(t token.Token, value bool) *VarLiteral {
 	return &VarLiteral{
 		Token:  t,
-		TypeOf: NewVarType(BoolType),
+		TypeOf: NewVarType(NewBoolType()),
 		Value:  value,
 	}
 }
@@ -393,7 +394,7 @@ func NewVarFromBool(t token.Token, value bool) *VarLiteral {
 func NewVarFromFloat(t token.Token, value float64) *VarLiteral {
 	return &VarLiteral{
 		Token:  t,
-		TypeOf: NewVarType(FloatType),
+		TypeOf: NewVarType(NewFloatType()),
 		Value:  value,
 	}
 }
@@ -402,7 +403,7 @@ func NewVarFromFloat(t token.Token, value float64) *VarLiteral {
 func NewVarFromChar(t token.Token, value rune) *VarLiteral {
 	return &VarLiteral{
 		Token:  t,
-		TypeOf: NewVarType(CharType),
+		TypeOf: NewVarType(NewCharType()),
 		Value:  value,
 	}
 }
@@ -411,7 +412,7 @@ func NewVarFromChar(t token.Token, value rune) *VarLiteral {
 func NewVarFromString(t token.Token, value string) *VarLiteral {
 	return &VarLiteral{
 		Token:  t,
-		TypeOf: NewVarType(StringType),
+		TypeOf: NewVarType(NewStringType()),
 		Value:  value,
 	}
 }
@@ -420,7 +421,7 @@ func NewVarFromString(t token.Token, value string) *VarLiteral {
 func NewVarFromObject(t token.Token, value Block) *VarLiteral {
 	return &VarLiteral{
 		Token:  t,
-		TypeOf: NewVarType(ObjectType),
+		TypeOf: NewVarType(NewObjectType()),
 		Value:  value,
 	}
 }
@@ -438,7 +439,7 @@ func NewVarFromObject(t token.Token, value Block) *VarLiteral {
 func NewVarFromFunction(t token.Token, value Block) *VarLiteral {
 	return &VarLiteral{
 		Token:  t,
-		TypeOf: NewVarType(FunctionType),
+		TypeOf: NewVarType(NewFunctionType()),
 		Value:  value,
 	}
 }
