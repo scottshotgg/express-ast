@@ -104,7 +104,8 @@ const (
 	C            = "C"
 	Import       = "IMPORT"
 	Include      = "INCLUDE"
-	Launch       = "LAUNCH"
+	Thread       = "THREAD"
+	Link         = "LINK"
 	Enum         = "ENUM"
 
 	VarType         = "var"
