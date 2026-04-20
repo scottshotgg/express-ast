@@ -746,6 +746,16 @@ func CompressTokens(lexTokens []token.Token) ([]token.Token, error) {
 					continue
 				}
 			}
+
+			// Combine < and - (SecOp) into <- (channel operator)
+			if currentToken.Type == token.LThan &&
+				nextToken.Type == token.SecOp && nextToken.Value.String == "-" {
+				if ct, ok := token.TokenMap["<-"]; ok {
+					compressedTokens = append(compressedTokens, ct)
+					i++
+					continue
+				}
+			}
 		}
 
 		compressedTokens = append(compressedTokens, lexTokens[i])
